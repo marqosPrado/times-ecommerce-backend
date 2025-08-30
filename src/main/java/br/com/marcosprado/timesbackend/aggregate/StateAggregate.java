@@ -2,6 +2,9 @@ package br.com.marcosprado.timesbackend.aggregate;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity(name = "STATE")
 public class StateAggregate {
 
@@ -12,6 +15,9 @@ public class StateAggregate {
 
     @Column(name = "sta_state", length = 20, nullable = false)
     private String state;
+
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AddressAggregate> addresses = new ArrayList<>();
 
     public StateAggregate() {}
 
@@ -33,5 +39,13 @@ public class StateAggregate {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public List<AddressAggregate> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<AddressAggregate> addresses) {
+        this.addresses = addresses;
     }
 }
