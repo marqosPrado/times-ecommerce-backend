@@ -39,8 +39,12 @@ public class AddressAggregate {
     private String observations;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "sta_id", nullable = false)
+    @JoinColumn(name = "add_sta_id", nullable = false)
     private StateAggregate state;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "add_cli_id", nullable = false)
+    private ClientAggregate client;
 
     public AddressAggregate() {}
 
@@ -110,5 +114,21 @@ public class AddressAggregate {
 
     public void setObservations(String observations) {
         this.observations = observations;
+    }
+
+    public StateAggregate getState() {
+        return state;
+    }
+
+    public void setState(StateAggregate state) {
+        this.state = state;
+    }
+
+    public ClientAggregate getClient() {
+        return client;
+    }
+
+    public void setClient(ClientAggregate client) {
+        this.client = client;
     }
 }
