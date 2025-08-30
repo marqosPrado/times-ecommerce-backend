@@ -1,0 +1,37 @@
+package br.com.marcosprado.timesbackend.aggregate;
+
+import jakarta.persistence.*;
+
+@Entity(name = "STATE")
+public class StateAggregate {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "sta_id")
+    private Integer id;
+
+    @Column(name = "sta_state", length = 20, nullable = false)
+    private String state;
+
+    public StateAggregate() {}
+
+    public StateAggregate(String state) {
+        this.state = state;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+}
