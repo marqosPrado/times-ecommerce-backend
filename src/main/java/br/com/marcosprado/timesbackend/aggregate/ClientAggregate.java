@@ -44,9 +44,38 @@ public class ClientAggregate {
     private BigDecimal credit;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AddressAggregate>  addresses = new ArrayList<>();
+    private List<AddressAggregate>  addresses;
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CreditCardAggregate>  creditCards;
 
     public ClientAggregate() {}
+
+    public ClientAggregate(
+            String fullName,
+            LocalDate birthDate,
+            String cpf,
+            String email,
+            String password,
+            TypePhoneNumber typePhoneNumber,
+            String phoneNumber,
+            Boolean active,
+            BigDecimal credit,
+            List<AddressAggregate> addresses,
+            List<CreditCardAggregate> creditCards
+    ) {
+        this.fullName = fullName;
+        this.birthDate = birthDate;
+        this.cpf = cpf;
+        this.email = email;
+        this.password = password;
+        this.typePhoneNumber = typePhoneNumber;
+        this.phoneNumber = phoneNumber;
+        this.active = active;
+        this.credit = credit;
+        this.addresses = addresses;
+        this.creditCards = creditCards;
+    }
 
     public Integer getId() {
         return id;
@@ -134,5 +163,13 @@ public class ClientAggregate {
 
     public void setAddresses(List<AddressAggregate> addresses) {
         this.addresses = addresses;
+    }
+
+    public List<CreditCardAggregate> getCreditCards() {
+        return creditCards;
+    }
+
+    public void setCreditCards(List<CreditCardAggregate> creditCards) {
+        this.creditCards = creditCards;
     }
 }
