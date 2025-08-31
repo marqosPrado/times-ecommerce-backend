@@ -27,4 +27,23 @@ public class AddressMapper {
                 .map(AddressMapper::toAggregate)
                 .collect(Collectors.toList());
     }
+
+    public static Address toDomain(AddressAggregate address) {
+        return Address.create(
+                address.getTypeResidence(),
+                address.getTypePlace(),
+                address.getStreet(),
+                address.getNumber(),
+                address.getNeighborhood(),
+                address.getCep(),
+                address.getCountry(),
+                address.getObservations()
+        );
+    }
+
+    public static List<Address> toDomain(List<AddressAggregate> addresses) {
+        return addresses.stream()
+                .map(AddressMapper::toDomain)
+                .collect(Collectors.toList());
+    }
 }
