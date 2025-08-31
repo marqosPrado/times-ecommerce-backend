@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "CLIENTS")
@@ -141,7 +140,7 @@ public class ClientAggregate {
         this.phoneNumber = phoneNumber;
     }
 
-    public Boolean getActive() {
+    public Boolean isActive() {
         return active;
     }
 
