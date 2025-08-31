@@ -20,4 +20,20 @@ public class ClientMapper {
                 CreditCardMapper.toAggregate(client.getCreditCards())
         );
     }
+
+    public static Client toDomain(ClientAggregate clientAggregate) {
+        return Client.create(
+                clientAggregate.getFullName(),
+                clientAggregate.getBirthDate(),
+                clientAggregate.getCpf(),
+                clientAggregate.getEmail(),
+                clientAggregate.getPassword(),
+                clientAggregate.getTypePhoneNumber(),
+                clientAggregate.getPhoneNumber(),
+                clientAggregate.isActive(),
+                clientAggregate.getCredit(),
+                AddressMapper.toDomain(clientAggregate.getAddresses()),
+                CreditCardMapper.toDomain(clientAggregate.getCreditCards())
+        );
+    }
 }
