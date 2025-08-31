@@ -35,6 +35,28 @@ public class Address {
         this.observation = observation;
     }
 
+    public static Address create(
+            TypeResidence typeResidence,
+            TypePlace typePlace,
+            String street,
+            int number,
+            String neighborhood,
+            String cep,
+            String country,
+            String observation
+    ) {
+        return new Address(
+                typeResidence,
+                typePlace,
+                street,
+                number,
+                neighborhood,
+                cep,
+                country,
+                observation
+        );
+    }
+
     public int getId() {
         return id;
     }
