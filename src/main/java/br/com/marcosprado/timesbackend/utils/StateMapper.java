@@ -8,4 +8,10 @@ public class StateMapper {
     public static StateAggregate toAggregate(State state) {
         return new StateAggregate(state.getState());
     }
+
+    public static State toDomain(StateAggregate stateAggregate) {
+        return State.create(
+                stateAggregate.getState()
+        );
+    }
 }
