@@ -30,6 +30,18 @@ public class CreditCardAggregate {
 
     public CreditCardAggregate() {}
 
+    public CreditCardAggregate(
+            String number,
+            String printedName,
+            CardFlag cardFlag,
+            String securityCode
+    ) {
+        this.number = number;
+        this.printedName = printedName;
+        this.cardFlag = cardFlag;
+        this.securityCode = securityCode;
+    }
+
     public Integer getId() {
         return id;
     }
