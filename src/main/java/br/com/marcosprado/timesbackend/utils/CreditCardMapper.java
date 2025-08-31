@@ -22,4 +22,19 @@ public class CreditCardMapper {
                 .map(CreditCardMapper::toAggregate)
                 .collect(Collectors.toList());
     }
+
+    public static CreditCard toDomain(CreditCardAggregate card) {
+        return CreditCard.create(
+                card.getNumber(),
+                card.getPrintedName(),
+                card.getCardFlag(),
+                card.getSecurityCode()
+        );
+    }
+
+    public static List<CreditCard> toDomain(List<CreditCardAggregate> cards) {
+        return cards.stream()
+                .map(CreditCardMapper::toDomain)
+                .collect(Collectors.toList());
+    }
 }
