@@ -54,6 +54,8 @@ public class Client {
             String password,
             TypePhoneNumber typePhoneNumber,
             String phoneNumber,
+            boolean active,
+            BigDecimal credit,
             List<Address> addresses,
             List<CreditCard> creditCards
     ) {
@@ -65,8 +67,8 @@ public class Client {
                 password,
                 typePhoneNumber,
                 phoneNumber,
-                true,
-                BigDecimal.ZERO,
+                active,
+                credit,
                 addresses,
                 creditCards
         );
