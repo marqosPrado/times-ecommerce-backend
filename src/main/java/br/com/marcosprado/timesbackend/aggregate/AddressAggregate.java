@@ -48,6 +48,28 @@ public class AddressAggregate {
 
     public AddressAggregate() {}
 
+    public AddressAggregate(
+            TypeResidence typeResidence,
+            TypePlace typePlace,
+            String street,
+            Integer number,
+            String neighborhood,
+            String cep,
+            String country,
+            String observations,
+            StateAggregate state
+    ) {
+        this.typeResidence = typeResidence;
+        this.typePlace = typePlace;
+        this.street = street;
+        this.number = number;
+        this.neighborhood = neighborhood;
+        this.cep = cep;
+        this.country = country;
+        this.observations = observations;
+        this.state = state;
+    }
+
     public Integer getId() {
         return id;
     }
