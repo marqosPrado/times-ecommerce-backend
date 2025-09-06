@@ -1,5 +1,6 @@
 package br.com.marcosprado.timesbackend.aggregate;
 
+import br.com.marcosprado.timesbackend.enums.Gender;
 import br.com.marcosprado.timesbackend.enums.TypePhoneNumber;
 import jakarta.persistence.*;
 
@@ -22,6 +23,10 @@ public class ClientAggregate {
 
     @Column(name = "cli_cpf", length = 11, nullable = false)
     private String cpf;
+
+    @Column(name = "cli_gender", length = 10, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(name = "cli_email", length = 50, nullable = false)
     private String email;
@@ -54,6 +59,7 @@ public class ClientAggregate {
             String fullName,
             LocalDate birthDate,
             String cpf,
+            Gender gender,
             String email,
             String password,
             TypePhoneNumber typePhoneNumber,
@@ -66,6 +72,7 @@ public class ClientAggregate {
         this.fullName = fullName;
         this.birthDate = birthDate;
         this.cpf = cpf;
+        this.gender = gender;
         this.email = email;
         this.password = password;
         this.typePhoneNumber = typePhoneNumber;
@@ -106,6 +113,18 @@ public class ClientAggregate {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public Boolean getActive() {
+        return active;
     }
 
     public String getEmail() {
