@@ -1,6 +1,7 @@
 package br.com.marcosprado.timesbackend.aggregate;
 
 import br.com.marcosprado.timesbackend.enums.CardFlag;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity(name = "CREDIT_CARDS")
@@ -25,7 +26,8 @@ public class CreditCardAggregate {
     private String securityCode;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "crd_cli_id", nullable = false)
+    @JoinColumn(name = "crd_cli_id")
+    @JsonIgnore
     private ClientAggregate client;
 
     public CreditCardAggregate() {}

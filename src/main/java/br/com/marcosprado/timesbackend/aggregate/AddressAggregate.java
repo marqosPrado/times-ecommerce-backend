@@ -2,6 +2,7 @@ package br.com.marcosprado.timesbackend.aggregate;
 
 import br.com.marcosprado.timesbackend.enums.TypePlace;
 import br.com.marcosprado.timesbackend.enums.TypeResidence;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity(name = "ADDRESS")
@@ -13,7 +14,7 @@ public class AddressAggregate {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "add_type_residence", length = 10, nullable = false)
+    @Column(name = "add_type_residence", length = 20, nullable = false)
     private TypeResidence typeResidence;
 
     @Enumerated(EnumType.STRING)
@@ -44,6 +45,7 @@ public class AddressAggregate {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "add_cli_id", nullable = false)
+    @JsonIgnore
     private ClientAggregate client;
 
     public AddressAggregate() {}
