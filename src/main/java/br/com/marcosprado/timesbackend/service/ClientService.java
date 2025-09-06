@@ -37,6 +37,7 @@ public class ClientService {
         client.setFullName(dto.fullName());
         client.setBirthDate(dto.birthDate());
         client.setCpf(dto.cpf());
+        client.setGender(dto.gender());
         client.setEmail(dto.email());
         client.setPassword(dto.password());
         client.setTypePhoneNumber(dto.typePhoneNumber());
@@ -56,6 +57,7 @@ public class ClientService {
                         adto.number(),
                         adto.neighborhood(),
                         adto.cep(),
+                        adto.city(),
                         adto.country(),
                         adto.observations(),
                         state
