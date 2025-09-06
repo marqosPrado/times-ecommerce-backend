@@ -1,5 +1,6 @@
 package br.com.marcosprado.timesbackend.dto;
 
+import br.com.marcosprado.timesbackend.enums.Gender;
 import br.com.marcosprado.timesbackend.enums.TypePhoneNumber;
 
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ public record ClientDto(
         String fullName,
         LocalDate birthDate,
         String cpf,
+        Gender gender,
         String email,
         String password,
         TypePhoneNumber typePhoneNumber,

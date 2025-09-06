@@ -10,6 +10,7 @@ public record AddressDto(
         Integer number,
         String neighborhood,
         String cep,
+        String city,
         String country,
         String observations,
         Integer stateId
