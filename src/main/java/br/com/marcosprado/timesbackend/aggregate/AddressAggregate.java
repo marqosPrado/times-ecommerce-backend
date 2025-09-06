@@ -30,8 +30,11 @@ public class AddressAggregate {
     @Column(name = "add_neighborhood", length = 20, nullable = false)
     private String neighborhood;
 
-    @Column(name = "add_cep", length = 8, nullable = false)
+    @Column(name = "add_cep", length = 10, nullable = false)
     private String cep;
+
+    @Column(name = "add_city", length = 50, nullable = false)
+    private String city;
 
     @Column(name = "add_country", length = 10, nullable = false)
     private String country;
@@ -57,6 +60,7 @@ public class AddressAggregate {
             Integer number,
             String neighborhood,
             String cep,
+            String city,
             String country,
             String observations,
             StateAggregate state
@@ -67,6 +71,7 @@ public class AddressAggregate {
         this.number = number;
         this.neighborhood = neighborhood;
         this.cep = cep;
+        this.city = city;
         this.country = country;
         this.observations = observations;
         this.state = state;
@@ -122,6 +127,14 @@ public class AddressAggregate {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getCountry() {
