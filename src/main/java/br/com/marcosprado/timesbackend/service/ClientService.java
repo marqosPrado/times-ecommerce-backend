@@ -1,6 +1,9 @@
 package br.com.marcosprado.timesbackend.service;
 
-import br.com.marcosprado.timesbackend.aggregate.*;
+import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
+import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
+import br.com.marcosprado.timesbackend.aggregate.StateAggregate;
 import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.dto.ClientDto;
 import br.com.marcosprado.timesbackend.dto.CreditCardDto;
@@ -12,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ClientService {
