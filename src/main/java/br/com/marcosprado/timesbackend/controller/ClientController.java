@@ -1,7 +1,7 @@
 package br.com.marcosprado.timesbackend.controller;
 
 import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
-import br.com.marcosprado.timesbackend.dto.ClientDto;
+import br.com.marcosprado.timesbackend.dto.client.ClientDto;
 import br.com.marcosprado.timesbackend.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

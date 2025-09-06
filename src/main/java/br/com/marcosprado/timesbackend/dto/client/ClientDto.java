@@ -1,5 +1,7 @@
-package br.com.marcosprado.timesbackend.dto;
+package br.com.marcosprado.timesbackend.dto.client;
 
+import br.com.marcosprado.timesbackend.dto.AddressDto;
+import br.com.marcosprado.timesbackend.dto.CreditCardDto;
 import br.com.marcosprado.timesbackend.enums.Gender;
 import br.com.marcosprado.timesbackend.enums.TypePhoneNumber;
 
