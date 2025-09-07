@@ -1,6 +1,7 @@
 package br.com.marcosprado.timesbackend.dto.client;
 
 import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.enums.Gender;
 
 public record ClientResponseDto(
         Integer id,
@@ -8,7 +9,8 @@ public record ClientResponseDto(
         String cpf,
         String email,
         String phoneNumber,
-        Boolean active
+        Boolean active,
+        Gender gender
 ) {
     public static ClientResponseDto from(ClientAggregate client) {
         return new ClientResponseDto(
@@ -17,7 +19,8 @@ public record ClientResponseDto(
                 client.getCpf(),
                 client.getEmail(),
                 client.getPhoneNumber(),
-                client.getActive()
+                client.getActive(),
+                client.getGender()
         );
     }
 }
