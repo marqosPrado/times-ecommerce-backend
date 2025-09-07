@@ -61,4 +61,14 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(clientService.registerNewCreditCard(id, creditCardDto));
     }
+
+    @DeleteMapping("/client/{clientId}/credit-card/{cardId}/remove")
+    public ResponseEntity<Void> removeCreditCard(
+            @PathVariable("clientId") String clientId,
+            @PathVariable("cardId") String cardId
+
+    ) {
+        clientService.removeCreditCard(clientId, cardId);
+        return ResponseEntity.noContent().build();
+    }
 }

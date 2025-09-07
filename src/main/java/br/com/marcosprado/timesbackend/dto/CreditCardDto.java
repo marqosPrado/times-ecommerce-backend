@@ -4,6 +4,7 @@ import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.enums.CardFlag;
 
 public record CreditCardDto(
+        Integer id,
         String number,
         String printedName,
         CardFlag cardFlag,
@@ -12,6 +13,7 @@ public record CreditCardDto(
 ) {
     public static CreditCardDto fromEntity(CreditCardAggregate card) {
         return new CreditCardDto(
+                card.getId(),
                 card.getNumber(),
                 card.getPrintedName(),
                 card.getCardFlag(),

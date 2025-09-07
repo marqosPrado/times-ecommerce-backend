@@ -168,4 +168,21 @@ public class ClientService {
         return ClientResponseCompleteDto.fromEntity(client);
     }
 
+    @Transactional
+    public void removeCreditCard(String clientId, String cardId) {
+        ClientAggregate client = clientRepository.findById(Integer.valueOf(clientId))
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + clientId));
+
+        Integer creditCardId = Integer.valueOf(cardId);
+
+        CreditCardAggregate cardToRemove = client.getCreditCards().stream()
+                .filter(card -> card.getId().equals(creditCardId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Cartão não encontrado com ID: " + cardId));
+
+        client.getCreditCards().remove(cardToRemove);
+
+        clientRepository.save(client);
+    }
+
 }
