@@ -5,8 +5,9 @@ import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
 import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.aggregate.StateAggregate;
 import br.com.marcosprado.timesbackend.dto.AddressDto;
-import br.com.marcosprado.timesbackend.dto.client.ClientDto;
 import br.com.marcosprado.timesbackend.dto.CreditCardDto;
+import br.com.marcosprado.timesbackend.dto.client.ClientDto;
+import br.com.marcosprado.timesbackend.dto.client.ClientResponseCompleteDto;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.repository.StateRepository;
 import org.springframework.stereotype.Service;
@@ -84,5 +85,11 @@ public class ClientService {
         client.setCreditCards(cards);
 
         return clientRepository.save(client);
+    }
+
+    public ClientResponseCompleteDto getClient(String id) {
+        return clientRepository.findById(Integer.parseInt(id))
+                .map(ClientResponseCompleteDto::fromEntity)
+                .orElseThrow(() -> new RuntimeException("Client not found with id: " + id));
     }
 }
