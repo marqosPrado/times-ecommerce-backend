@@ -71,4 +71,13 @@ public class ClientController {
         clientService.removeCreditCard(clientId, cardId);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/client/{clientId}/address/{addressId}/update")
+    public ResponseEntity<ClientResponseCompleteDto> updateAddress(
+            @PathVariable("clientId") String clientId,
+            @PathVariable("addressId") String addressId,
+            @RequestBody AddressDto addressDto
+    ) {
+        return ResponseEntity.ok(clientService.updateAddress(clientId, addressId, addressDto));
+    }
 }

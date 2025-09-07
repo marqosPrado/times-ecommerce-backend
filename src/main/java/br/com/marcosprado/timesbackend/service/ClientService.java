@@ -185,4 +185,33 @@ public class ClientService {
         clientRepository.save(client);
     }
 
+    @Transactional
+    public ClientResponseCompleteDto updateAddress(String clientId, String addressId, AddressDto addressDto) {
+        ClientAggregate client = clientRepository.findById(Integer.valueOf(clientId))
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + clientId));
+
+        AddressAggregate address = client.getAddresses().stream()
+                .filter(a -> a.getId().equals(Integer.valueOf(addressId)))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Endereço não encontrado com ID: " + addressId));
+
+        address.setTypeResidence(addressDto.typeResidence());
+        address.setTypePlace(addressDto.typePlace());
+        address.setStreet(addressDto.street());
+        address.setNumber(addressDto.number());
+        address.setNeighborhood(addressDto.neighborhood());
+        address.setCep(addressDto.cep());
+        address.setCity(addressDto.city());
+        address.setCountry(addressDto.country());
+        address.setObservations(addressDto.observations());
+
+        StateAggregate state = stateRepository.findById(addressDto.stateId())
+                .orElseThrow(() -> new EntityNotFoundException("Estado não encontrado com ID: " + addressDto.stateId()));
+        address.setState(state);
+
+        clientRepository.save(client);
+
+        return ClientResponseCompleteDto.fromEntity(client);
+    }
+
 }

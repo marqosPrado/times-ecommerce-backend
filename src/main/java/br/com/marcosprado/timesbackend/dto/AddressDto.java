@@ -5,6 +5,7 @@ import br.com.marcosprado.timesbackend.enums.TypePlace;
 import br.com.marcosprado.timesbackend.enums.TypeResidence;
 
 public record AddressDto(
+        Integer id,
         TypeResidence typeResidence,
         TypePlace typePlace,
         String street,
@@ -18,6 +19,7 @@ public record AddressDto(
 ) {
     public static AddressDto fromEntity(AddressAggregate address) {
         return new AddressDto(
+                address.getId(),
                 address.getTypeResidence(),
                 address.getTypePlace(),
                 address.getStreet(),
