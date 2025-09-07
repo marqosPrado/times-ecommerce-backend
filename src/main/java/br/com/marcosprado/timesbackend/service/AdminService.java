@@ -3,14 +3,13 @@ package br.com.marcosprado.timesbackend.service;
 import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
 import br.com.marcosprado.timesbackend.dto.admin.ClientFilterDto;
 import br.com.marcosprado.timesbackend.dto.admin.UpdateClientStatusDto;
-import br.com.marcosprado.timesbackend.dto.client.ClientResponseDto;
+import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseDto;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.specification.ClientSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

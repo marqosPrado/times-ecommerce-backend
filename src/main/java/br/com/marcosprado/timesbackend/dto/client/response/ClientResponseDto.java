@@ -1,4 +1,4 @@
-package br.com.marcosprado.timesbackend.dto.client;
+package br.com.marcosprado.timesbackend.dto.client.response;
 
 import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
 import br.com.marcosprado.timesbackend.enums.Gender;

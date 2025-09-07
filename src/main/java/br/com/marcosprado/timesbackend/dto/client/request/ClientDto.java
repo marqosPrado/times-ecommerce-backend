@@ -1,4 +1,4 @@
-package br.com.marcosprado.timesbackend.dto.client;
+package br.com.marcosprado.timesbackend.dto.client.request;
 
 import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.dto.CreditCardDto;

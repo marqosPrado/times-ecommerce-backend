@@ -2,7 +2,7 @@ package br.com.marcosprado.timesbackend.controller.admin;
 
 import br.com.marcosprado.timesbackend.dto.admin.ClientFilterDto;
 import br.com.marcosprado.timesbackend.dto.admin.UpdateClientStatusDto;
-import br.com.marcosprado.timesbackend.dto.client.ClientResponseDto;
+import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseDto;
 import br.com.marcosprado.timesbackend.service.AdminService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;

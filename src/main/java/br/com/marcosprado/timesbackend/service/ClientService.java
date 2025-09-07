@@ -6,8 +6,10 @@ import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.aggregate.StateAggregate;
 import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.dto.CreditCardDto;
-import br.com.marcosprado.timesbackend.dto.client.ClientDto;
-import br.com.marcosprado.timesbackend.dto.client.ClientResponseCompleteDto;
+import br.com.marcosprado.timesbackend.dto.client.request.ClientDto;
+import br.com.marcosprado.timesbackend.dto.client.request.UpdateBasicDataClient;
+import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseCompleteDto;
+import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseDto;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.repository.StateRepository;
 import org.springframework.stereotype.Service;
@@ -91,5 +93,16 @@ public class ClientService {
         return clientRepository.findById(Integer.parseInt(id))
                 .map(ClientResponseCompleteDto::fromEntity)
                 .orElseThrow(() -> new RuntimeException("Client not found with id: " + id));
+    }
+
+    public ClientResponseCompleteDto updateBasicData(UpdateBasicDataClient updateBasicDataClient, String id) {
+        ClientAggregate clientAggregate = clientRepository.findById(Integer.parseInt(id))
+                .orElseThrow(() -> new RuntimeException("Client not found with id: " + id));
+
+        clientAggregate.setFullName(updateBasicDataClient.fullName());
+        clientAggregate.setGender(updateBasicDataClient.gender());
+        clientAggregate.setGender(updateBasicDataClient.gender());
+
+        return ClientResponseCompleteDto.fromEntity(clientRepository.save(clientAggregate));
     }
 }
