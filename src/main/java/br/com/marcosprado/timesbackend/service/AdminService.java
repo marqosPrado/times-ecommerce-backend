@@ -2,43 +2,51 @@ package br.com.marcosprado.timesbackend.service;
 
 import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
 import br.com.marcosprado.timesbackend.dto.admin.ClientFilterDto;
+import br.com.marcosprado.timesbackend.dto.admin.UpdateClientStatusDto;
 import br.com.marcosprado.timesbackend.dto.client.ClientResponseDto;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.specification.ClientSpecification;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminService {
+
     private final ClientRepository clientRepository;
 
-    public AdminService(
-            ClientRepository clientRepository
-    ) {
+    public AdminService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
-    public List<ClientResponseDto> search(ClientFilterDto filter) {
-        List<ClientAggregate> clientAggregates = clientRepository.findAll(
-                Specification.allOf(
-                        ClientSpecification.hasName(filter.name()),
-                        ClientSpecification.hasCpf(filter.cpf()),
-                        ClientSpecification.hasGender(filter.gender()),
-                        ClientSpecification.hasEmail(filter.email()),
-                        ClientSpecification.hasPhone(filter.phoneNumber()),
-                        ClientSpecification.hasActive(filter.active())
-                )
-        );
+    public Page<ClientResponseDto> search(ClientFilterDto filter, Pageable pageable) {
 
-        if (clientAggregates.isEmpty()) {
-            throw new RuntimeException("Nenhum cliente encontrado");
-        }
+        Specification<ClientAggregate> spec = Specification
+                .where(ClientSpecification.hasName(filter.name()))
+                .and(ClientSpecification.hasCpf(filter.cpf()))
+                .and(ClientSpecification.hasGender(filter.gender()))
+                .and(ClientSpecification.hasEmail(filter.email()))
+                .and(ClientSpecification.hasPhone(filter.phoneNumber()))
+                .and(ClientSpecification.hasActive(filter.active()));
 
-        return clientAggregates.stream()
-                .map(ClientResponseDto::from)
-                .toList();
+        Page<ClientAggregate> clientPage = clientRepository.findAll(spec, pageable);
+
+        return clientPage.map(ClientResponseDto::from);
+    }
+
+    @Transactional
+    public ClientResponseDto updateStatus(Integer id, UpdateClientStatusDto dto) {
+        ClientAggregate client = clientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente com ID " + id + " não encontrado."));
+
+        client.setActive(dto.active());
+
+        ClientAggregate updatedClient = clientRepository.save(client);
+
+        return ClientResponseDto.from(updatedClient);
     }
 }
