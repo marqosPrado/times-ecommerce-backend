@@ -1,5 +1,6 @@
 package br.com.marcosprado.timesbackend.dto;
 
+import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.enums.CardFlag;
 
 public record CreditCardDto(
@@ -8,4 +9,12 @@ public record CreditCardDto(
         CardFlag cardFlag,
         String securityCode
 ) {
+    public static CreditCardDto fromEntity(CreditCardAggregate card) {
+        return new CreditCardDto(
+                card.getNumber(),
+                card.getPrintedName(),
+                card.getCardFlag(),
+                card.getSecurityCode()
+        );
+    }
 }
