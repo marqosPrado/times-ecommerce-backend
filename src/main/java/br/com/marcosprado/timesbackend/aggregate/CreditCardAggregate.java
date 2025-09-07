@@ -25,6 +25,9 @@ public class CreditCardAggregate {
     @Column(name = "crd_security_code", nullable = false, length = 4)
     private String securityCode;
 
+    @Column(name = "crd_is_main", nullable = false)
+    private Boolean isMain;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "crd_cli_id")
     @JsonIgnore
@@ -36,12 +39,14 @@ public class CreditCardAggregate {
             String number,
             String printedName,
             CardFlag cardFlag,
-            String securityCode
+            String securityCode,
+            Boolean isMain
     ) {
         this.number = number;
         this.printedName = printedName;
         this.cardFlag = cardFlag;
         this.securityCode = securityCode;
+        this.isMain = isMain;
     }
 
     public Integer getId() {
@@ -78,6 +83,14 @@ public class CreditCardAggregate {
 
     public void setSecurityCode(String securityCode) {
         this.securityCode = securityCode;
+    }
+
+    public Boolean getMain() {
+        return isMain;
+    }
+
+    public void setMain(Boolean main) {
+        isMain = main;
     }
 
     public ClientAggregate getClient() {

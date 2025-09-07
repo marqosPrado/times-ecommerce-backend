@@ -7,14 +7,16 @@ public record CreditCardDto(
         String number,
         String printedName,
         CardFlag cardFlag,
-        String securityCode
+        String securityCode,
+        Boolean isMain
 ) {
     public static CreditCardDto fromEntity(CreditCardAggregate card) {
         return new CreditCardDto(
                 card.getNumber(),
                 card.getPrintedName(),
                 card.getCardFlag(),
-                card.getSecurityCode()
+                card.getSecurityCode(),
+                card.getMain()
         );
     }
 }

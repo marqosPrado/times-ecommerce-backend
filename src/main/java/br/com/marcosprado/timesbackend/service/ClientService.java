@@ -9,7 +9,6 @@ import br.com.marcosprado.timesbackend.dto.CreditCardDto;
 import br.com.marcosprado.timesbackend.dto.client.request.ClientDto;
 import br.com.marcosprado.timesbackend.dto.client.request.UpdateBasicDataClient;
 import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseCompleteDto;
-import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseDto;
 import br.com.marcosprado.timesbackend.repository.AddressRepository;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.repository.StateRepository;
@@ -86,7 +85,8 @@ public class ClientService {
                         cdto.number(),
                         cdto.printedName(),
                         cdto.cardFlag(),
-                        cdto.securityCode()
+                        cdto.securityCode(),
+                        true
                 );
                 card.setClient(client);
                 cards.add(card);
@@ -143,4 +143,29 @@ public class ClientService {
 
         return ClientResponseCompleteDto.fromEntity(client);
     }
+
+    @Transactional
+    public ClientResponseCompleteDto registerNewCreditCard(String clientId, CreditCardDto creditCardDto) {
+        ClientAggregate client = clientRepository.findById(Integer.valueOf(clientId))
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + clientId));
+
+        if (Boolean.TRUE.equals(creditCardDto.isMain())) {
+            client.getCreditCards().forEach(card -> card.setMain(false));
+        }
+
+        CreditCardAggregate newCard = new CreditCardAggregate(
+                creditCardDto.number(),
+                creditCardDto.printedName(),
+                creditCardDto.cardFlag(),
+                creditCardDto.securityCode(),
+                creditCardDto.isMain() != null ? creditCardDto.isMain() : false
+        );
+        newCard.setClient(client);
+
+        client.getCreditCards().add(newCard);
+        clientRepository.save(client);
+
+        return ClientResponseCompleteDto.fromEntity(client);
+    }
+
 }

@@ -2,6 +2,7 @@ package br.com.marcosprado.timesbackend.controller;
 
 import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
 import br.com.marcosprado.timesbackend.dto.AddressDto;
+import br.com.marcosprado.timesbackend.dto.CreditCardDto;
 import br.com.marcosprado.timesbackend.dto.client.request.ClientDto;
 import br.com.marcosprado.timesbackend.dto.client.request.UpdateBasicDataClient;
 import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseCompleteDto;
@@ -50,5 +51,14 @@ public class ClientController {
             @RequestBody AddressDto addressDto
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.registerNewAddress(id,  addressDto));
+    }
+
+    @PostMapping("/client/{id}/credit-card/new")
+    public ResponseEntity<ClientResponseCompleteDto> newCreditCard(
+            @PathVariable("id") String id,
+            @RequestBody CreditCardDto creditCardDto
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(clientService.registerNewCreditCard(id, creditCardDto));
     }
 }
