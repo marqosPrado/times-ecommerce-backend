@@ -10,8 +10,10 @@ import br.com.marcosprado.timesbackend.dto.client.request.ClientDto;
 import br.com.marcosprado.timesbackend.dto.client.request.UpdateBasicDataClient;
 import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseCompleteDto;
 import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseDto;
+import br.com.marcosprado.timesbackend.repository.AddressRepository;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.repository.StateRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +26,15 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
     private final StateRepository stateRepository;
+    private final AddressRepository addressRepository;
 
-    public ClientService(ClientRepository clientRepository, StateRepository stateRepository) {
+    public ClientService(
+            ClientRepository clientRepository,
+            AddressRepository addressRepository,
+            StateRepository stateRepository
+            ) {
         this.clientRepository = clientRepository;
+        this.addressRepository = addressRepository;
         this.stateRepository = stateRepository;
     }
 
@@ -104,5 +112,35 @@ public class ClientService {
         clientAggregate.setGender(updateBasicDataClient.gender());
 
         return ClientResponseCompleteDto.fromEntity(clientRepository.save(clientAggregate));
+    }
+
+    @Transactional
+    public ClientResponseCompleteDto registerNewAddress(String clientId, AddressDto addressDto) {
+        ClientAggregate client = clientRepository.findById(Integer.valueOf(clientId))
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + clientId));
+
+        StateAggregate state = stateRepository.findById(addressDto.stateId())
+                .orElseThrow(() -> new EntityNotFoundException("Estado não encontrado com ID: " + addressDto.stateId()));
+
+        AddressAggregate newAddress = new AddressAggregate(
+                addressDto.typeResidence(),
+                addressDto.typePlace(),
+                addressDto.street(),
+                addressDto.number(),
+                addressDto.neighborhood(),
+                addressDto.cep(),
+                addressDto.city(),
+                addressDto.country(),
+                addressDto.observations(),
+                state
+        );
+
+        newAddress.setClient(client);
+
+        addressRepository.save(newAddress);
+
+        client.getAddresses().add(newAddress);
+
+        return ClientResponseCompleteDto.fromEntity(client);
     }
 }

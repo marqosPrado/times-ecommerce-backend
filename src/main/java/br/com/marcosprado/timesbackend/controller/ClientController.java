@@ -1,6 +1,7 @@
 package br.com.marcosprado.timesbackend.controller;
 
 import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.dto.client.request.ClientDto;
 import br.com.marcosprado.timesbackend.dto.client.request.UpdateBasicDataClient;
 import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseCompleteDto;
@@ -41,5 +42,13 @@ public class ClientController {
             @RequestBody UpdateBasicDataClient clientUpdateDto
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.updateBasicData(clientUpdateDto, id));
+    }
+
+    @PostMapping("client/{id}/address/new")
+    public ResponseEntity<ClientResponseCompleteDto> newAddress(
+            @PathVariable("id") String id,
+            @RequestBody AddressDto addressDto
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.registerNewAddress(id,  addressDto));
     }
 }
