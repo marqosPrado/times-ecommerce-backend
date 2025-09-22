@@ -108,7 +108,7 @@ public class ClientService {
                 .orElseThrow(() -> new RuntimeException("Client not found with id: " + id));
 
         clientAggregate.setFullName(updateBasicDataClient.fullName());
-        clientAggregate.setGender(updateBasicDataClient.gender());
+        clientAggregate.setPhoneNumber(updateBasicDataClient.phoneNumber());
         clientAggregate.setGender(updateBasicDataClient.gender());
 
         return ClientResponseCompleteDto.fromEntity(clientRepository.save(clientAggregate));
