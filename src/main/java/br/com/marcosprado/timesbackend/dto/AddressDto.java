@@ -1,6 +1,7 @@
 package br.com.marcosprado.timesbackend.dto;
 
 import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
+import br.com.marcosprado.timesbackend.aggregate.StateAggregate;
 import br.com.marcosprado.timesbackend.enums.TypePlace;
 import br.com.marcosprado.timesbackend.enums.TypeResidence;
 
@@ -39,5 +40,20 @@ public record AddressDto(
         return addresses.stream()
                 .map(AddressDto::fromEntity)
                 .toArray(AddressDto[]::new);
+    }
+
+    public AddressAggregate toEntity(StateAggregate state) {
+        return new AddressAggregate(
+                this.typeResidence,
+                this.typePlace,
+                this.street,
+                this.number,
+                this.neighborhood,
+                this.cep,
+                this.city,
+                this.country,
+                this.observations,
+                state
+        );
     }
 }

@@ -4,10 +4,7 @@ import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.service.AddressService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -22,5 +19,14 @@ public class AddressController {
     public ResponseEntity<AddressDto[]> getAddress(@PathVariable("id") String id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.getAllAddressByClientId(id));
+    }
+
+    @PostMapping("/address/client/{id}/new")
+    public ResponseEntity<AddressDto> newAddress(
+            @RequestBody AddressDto addressDto,
+            @PathVariable("id") String id
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.registerAddress(addressDto, id));
     }
 }
