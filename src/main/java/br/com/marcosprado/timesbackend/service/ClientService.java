@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -214,4 +215,7 @@ public class ClientService {
         return ClientResponseCompleteDto.fromEntity(client);
     }
 
+    public Optional<ClientAggregate> findClientById(String clientId) {
+        return this.clientRepository.findById(Integer.parseInt(clientId));
+    }
 }

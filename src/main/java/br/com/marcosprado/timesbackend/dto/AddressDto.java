@@ -4,6 +4,8 @@ import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
 import br.com.marcosprado.timesbackend.enums.TypePlace;
 import br.com.marcosprado.timesbackend.enums.TypeResidence;
 
+import java.util.Collection;
+
 public record AddressDto(
         Integer id,
         TypeResidence typeResidence,
@@ -31,5 +33,11 @@ public record AddressDto(
                 address.getObservations(),
                 address.getState().getId()
         );
+    }
+
+    public static AddressDto[] fromEntities(Collection<AddressAggregate> addresses) {
+        return addresses.stream()
+                .map(AddressDto::fromEntity)
+                .toArray(AddressDto[]::new);
     }
 }
