@@ -4,7 +4,6 @@ import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.enums.CardFlag;
 
 import java.util.Collection;
-import java.util.List;
 
 public record CreditCardDto(
         Integer id,
@@ -29,5 +28,15 @@ public record CreditCardDto(
         return cards.stream()
                 .map(CreditCardDto::fromEntity)
                 .toArray(CreditCardDto[]::new);
+    }
+
+    public CreditCardAggregate toEntity() {
+        return new CreditCardAggregate(
+                this.number,
+                this.printedName,
+                this.cardFlag,
+                this.securityCode,
+                this.isMain != null ? this.isMain : false
+        );
     }
 }

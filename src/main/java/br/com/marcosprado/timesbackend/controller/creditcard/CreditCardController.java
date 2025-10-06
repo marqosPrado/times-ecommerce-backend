@@ -4,10 +4,7 @@ import br.com.marcosprado.timesbackend.dto.CreditCardDto;
 import br.com.marcosprado.timesbackend.service.CreditCardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -22,5 +19,14 @@ public class CreditCardController {
     public ResponseEntity<CreditCardDto[]> getCreditCard(@PathVariable("id") String id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.getAllCreditCardsByClientId(id));
+    }
+
+    @PostMapping("/credit-card/client/{id}/new")
+    public ResponseEntity<CreditCardDto> newCreditCard(
+            @RequestBody CreditCardDto creditCardDto,
+            @PathVariable("id") String id
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.registerCreditCard(creditCardDto, id));
     }
 }

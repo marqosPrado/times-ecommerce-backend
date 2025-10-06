@@ -1,8 +1,12 @@
 package br.com.marcosprado.timesbackend.service;
 
+import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.dto.CreditCardDto;
 import br.com.marcosprado.timesbackend.repository.CreditCardRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CreditCardService {
@@ -23,4 +27,21 @@ public class CreditCardService {
         );
     }
 
+    public CreditCardDto registerCreditCard(CreditCardDto creditCardDto, String clientId) {
+        ClientAggregate clientAggregate = this.clientService.findClientById(clientId)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        CreditCardAggregate newCreditCard = creditCardDto.toEntity();
+        newCreditCard.setClient(clientAggregate);
+
+        if (newCreditCard.getMain()) {
+            List<CreditCardAggregate> creditCards = this.creditCardRepository.findAllById(Integer.parseInt(clientId));
+            creditCards.forEach(creditCard -> {
+                creditCard.setMain(false);
+                creditCardRepository.save(creditCard);
+            });
+        }
+
+        return CreditCardDto.fromEntity(this.creditCardRepository.save(newCreditCard));
+    }
 }
