@@ -1,10 +1,12 @@
 package br.com.marcosprado.timesbackend.aggregate;
 
+import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "VOUCHERS", indexes = {
@@ -34,6 +36,9 @@ public class Voucher {
 
     @Column(nullable = false)
     private boolean isActive;
+
+    @OneToMany(mappedBy = "voucher",  fetch = FetchType.LAZY)
+    private Set<PurchaseOrder> purchaseOrders;
 
     protected Voucher() {}
 
