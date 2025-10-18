@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "VOUCHERS", indexes = {
+@Table(name = "vouchers", indexes = {
         @Index(name = "idx_voucher_identifier", columnList = "identifier"),
         @Index(name = "idx_voucher_active_dates", columnList = "isActive,startDate,endDate")
 })
@@ -17,24 +17,26 @@ public class Voucher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "vou_id")
     private Long id;
 
-    @Column(length = 6, nullable = false, unique = true)
+    @Column(length = 6, nullable = false, unique = true, name = "identifier")
     private String identifier;
 
+    @Column(nullable = false, name = "cupom_type")
     @Enumerated(EnumType.STRING)
     private CupomType cupomType;
 
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column(nullable = false, precision = 5, scale = 2, name = "percentage")
     private BigDecimal percentage;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "end_date")
     private LocalDateTime endDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "is_active")
     private boolean isActive;
 
     @OneToMany(mappedBy = "voucher",  fetch = FetchType.LAZY)

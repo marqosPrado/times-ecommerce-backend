@@ -3,6 +3,7 @@ package br.com.marcosprado.timesbackend.aggregate.purchase_order;
 import br.com.marcosprado.timesbackend.aggregate.Product;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +14,15 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private int quantity;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal unitPrice;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal subTotal;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
@@ -21,21 +31,34 @@ public class OrderItem {
     @JoinColumn(name = "purchase_order_id", referencedColumnName = "id")
     private PurchaseOrder purchaseOrder;
 
-    @Column
-    private int quantity;
-
-    public OrderItem() {
+    protected OrderItem() {
     }
 
-    public OrderItem(Long id, Product product, int quantity) {
+    public OrderItem(
+            Long id,
+            int quantity,
+            BigDecimal unitPrice,
+            BigDecimal subTotal,
+            Product product
+    ) {
         this.id = id;
-        this.product = product;
         this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.subTotal = subTotal;
+        this.product = product;
     }
 
     public OrderItem(Product product, int quantity) {
-        this.product = product;
-        this.quantity = quantity;
+        setProduct(product);
+        setQuantity(quantity);
+        this.unitPrice = product.getPrice();
+        calculateSubTotal();
+    }
+
+    private void calculateSubTotal() {
+        if (this.unitPrice != null && quantity > 0) {
+            this.subTotal = this.unitPrice.multiply(new BigDecimal(quantity));
+        }
     }
 
     public Long getId() {
@@ -46,7 +69,8 @@ public class OrderItem {
         return product;
     }
 
-    public void setProduct(Product product) {
+    private void setProduct(Product product) {
+        if (product == null) throw new IllegalArgumentException("Produto não deve ser nulo");
         this.product = product;
     }
 
@@ -54,8 +78,10 @@ public class OrderItem {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    private void setQuantity(int quantity) {
+        if (quantity <= 0) throw new IllegalArgumentException("Quantidade do produto deve ser maior que 0");
         this.quantity = quantity;
+        calculateSubTotal();
     }
 
     public void setId(Long id) {
@@ -70,13 +96,30 @@ public class OrderItem {
         this.purchaseOrder = purchaseOrder;
     }
 
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        if (unitPrice == null) throw new IllegalArgumentException("O preço unitário do produto não deve ser nulo");
+        this.unitPrice = unitPrice;
+        calculateSubTotal();
+    }
+
+    public BigDecimal getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(BigDecimal subTotal) {
+        this.subTotal = subTotal;
+    }
+
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return quantity == orderItem.quantity
-                && Objects.equals(id, orderItem.id)
-                && Objects.equals(product, orderItem.product);
+        return Objects.equals(id, orderItem.id);
     }
 
     @Override
