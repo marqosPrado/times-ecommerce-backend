@@ -20,6 +20,9 @@ public class Voucher {
     @Column(length = 6, nullable = false, unique = true)
     private String identifier;
 
+    @Enumerated(EnumType.STRING)
+    private CupomType cupomType;
+
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal percentage;
 
@@ -37,6 +40,7 @@ public class Voucher {
     public Voucher(
             Long id,
             String identifier,
+            CupomType cupomType,
             BigDecimal percentage,
             LocalDateTime startDate,
             LocalDateTime endDate,
@@ -44,14 +48,16 @@ public class Voucher {
     ) {
         this.id = id;
         this.identifier = identifier;
+        this.cupomType = cupomType;
         this.percentage = percentage;
         this.startDate = startDate;
         this.endDate = endDate;
         this.isActive = isActive;
     }
 
-    public Voucher(String identifier, BigDecimal percentage, LocalDateTime endDate) {
+    public Voucher(String identifier, CupomType cupomType, BigDecimal percentage, LocalDateTime endDate) {
         setIdentifier(identifier);
+        this.cupomType = cupomType;
         setPercentage(percentage);
         this.startDate = LocalDateTime.now();
         setEndDate(endDate);
@@ -83,6 +89,14 @@ public class Voucher {
             throw new IllegalArgumentException("Identificador do cupom deve ter 6 caracteres.");
         }
         this.identifier = identifier.toUpperCase().trim();
+    }
+
+    public CupomType getCupomType() {
+        return cupomType;
+    }
+
+    public void setCupomType(CupomType cupomType) {
+        this.cupomType = cupomType;
     }
 
     public BigDecimal getPercentage() {

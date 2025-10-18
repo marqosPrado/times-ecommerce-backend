@@ -1,5 +1,6 @@
 package br.com.marcosprado.timesbackend.dto;
 
+import br.com.marcosprado.timesbackend.aggregate.CupomType;
 import br.com.marcosprado.timesbackend.aggregate.Voucher;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,6 +15,9 @@ public record CreateVoucherRequest(
         @Pattern(regexp = "^[A-Za-z0-9]+$", message = "O identificador deve compor de letras e números.")
         String identifier,
 
+        @NotNull(message = "Tipo do cupom é obrigatório")
+        CupomType cupomType,
+
         @NotNull(message = "A porcentagem do cupom é obrigatória.")
         @Pattern(regexp = "^\\d{1,2}(\\.\\d{1,2})?$", message = "Porcentagem inválida.")
         String percentage,
@@ -26,12 +30,11 @@ public record CreateVoucherRequest(
     @JsonCreator
     public CreateVoucherRequest(
             @JsonProperty("identifier") String identifier,
+            @JsonProperty("voucher_type") String voucherType,
             @JsonProperty("percentage") String percentage,
             @JsonProperty("end_date")   LocalDateTime endDate
     ) {
-        this.identifier = identifier;
-        this.percentage = percentage;
-        this.endDate = endDate;
+        this(identifier, CupomType.fromValue(voucherType), percentage, endDate);
     }
 
     /**
@@ -65,6 +68,7 @@ public record CreateVoucherRequest(
     public Voucher toEntity() {
         return new Voucher(
                 identifier(),
+                cupomType(),
                 getPercentageAsBigDecimal(),
                 endDate()
         );
