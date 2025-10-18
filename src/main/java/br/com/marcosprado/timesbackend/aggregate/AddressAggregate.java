@@ -1,9 +1,12 @@
 package br.com.marcosprado.timesbackend.aggregate;
 
+import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import br.com.marcosprado.timesbackend.enums.TypePlace;
 import br.com.marcosprado.timesbackend.enums.TypeResidence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity(name = "ADDRESS")
 public class AddressAggregate {
@@ -50,6 +53,9 @@ public class AddressAggregate {
     @JoinColumn(name = "add_cli_id", nullable = false)
     @JsonIgnore
     private ClientAggregate client;
+
+    @OneToMany(mappedBy = "address")
+    private Set<PurchaseOrder> purchaseOrders;
 
     public AddressAggregate() {}
 
