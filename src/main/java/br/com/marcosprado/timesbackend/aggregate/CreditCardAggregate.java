@@ -1,8 +1,11 @@
 package br.com.marcosprado.timesbackend.aggregate;
 
+import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import br.com.marcosprado.timesbackend.enums.CardFlag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity(name = "CREDIT_CARDS")
 public class CreditCardAggregate {
@@ -32,6 +35,9 @@ public class CreditCardAggregate {
     @JoinColumn(name = "crd_cli_id")
     @JsonIgnore
     private ClientAggregate client;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<PurchaseOrder> purchaseOrders;
 
     public CreditCardAggregate() {}
 

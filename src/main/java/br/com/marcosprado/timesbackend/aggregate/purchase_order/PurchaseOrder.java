@@ -1,6 +1,7 @@
 package br.com.marcosprado.timesbackend.aggregate.purchase_order;
 
 import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
+import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.aggregate.Voucher;
 import jakarta.persistence.*;
 
@@ -34,4 +35,8 @@ public class PurchaseOrder {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "voucher_id", referencedColumnName = "id")
     private Voucher voucher;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "credit_card_id", referencedColumnName = "crd_id")
+    private CreditCardAggregate creditCard;
 }
