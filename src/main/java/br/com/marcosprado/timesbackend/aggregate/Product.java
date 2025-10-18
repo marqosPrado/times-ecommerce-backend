@@ -1,10 +1,14 @@
 package br.com.marcosprado.timesbackend.aggregate;
 
+import br.com.marcosprado.timesbackend.aggregate.purchase_order.OrderItem;
 import br.com.marcosprado.timesbackend.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "PRODUCTS")
 public class Product {
@@ -46,6 +50,10 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImageAggregate> images;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private Set<OrderItem> orderItems;
+
     public Product() {}
 
     public Product(
@@ -74,6 +82,7 @@ public class Product {
         this.boxFormat = boxFormat;
         this.dial = dial;
         this.images = images;
+        this.orderItems = new HashSet<>();
     }
 
     public Long getId() {
