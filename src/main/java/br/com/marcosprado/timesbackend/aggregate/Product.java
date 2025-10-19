@@ -10,7 +10,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity(name = "PRODUCTS")
+@Entity
+@Table(
+        name = "products",
+        indexes = {
+                @Index(name = "idx_product_title", columnList = "title"),
+                @Index(name = "idx_product_brand", columnList = "brand"),
+                @Index(name = "idx_product_price", columnList = "price"),
+                @Index(name = "idx_product_gender", columnList = "gender"),
+                @Index(name = "idx_product_line", columnList = "line"),
+                @Index(name = "idx_product_style", columnList = "style"),
+                @Index(name = "idx_product_mechanism", columnList = "mechanism"),
+                @Index(name = "idx_product_box_material", columnList = "box_material"),
+                @Index(name = "idx_product_box_format", columnList = "box_format"),
+                @Index(name = "idx_product_dial", columnList = "dial")
+        }
+)
 public class Product {
 
     @Id
@@ -48,7 +63,7 @@ public class Product {
     @Column(name = "dial", nullable = false)
     private String dial;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImageAggregate> images;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
