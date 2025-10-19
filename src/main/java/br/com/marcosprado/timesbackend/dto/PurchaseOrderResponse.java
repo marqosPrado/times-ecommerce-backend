@@ -5,6 +5,7 @@ import br.com.marcosprado.timesbackend.dto.payment.PaymentResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public record PurchaseOrderResponse(
@@ -53,5 +54,15 @@ public record PurchaseOrderResponse(
                 PaymentResponse.from(order),
                 PricingResponse.from(order)
         );
+    }
+
+    public static List<PurchaseOrderResponse> fromEntity(Collection<PurchaseOrder> orders) {
+        if (orders == null) {
+            throw new IllegalArgumentException("A lista de PurchaseOrder não pode ser null");
+        }
+
+        return orders.stream()
+                .map(PurchaseOrderResponse::fromEntity)
+                .toList();
     }
 }

@@ -9,6 +9,10 @@ import br.com.marcosprado.timesbackend.exception.OperationNotAllowedException;
 import br.com.marcosprado.timesbackend.exception.ResourceNotFoundException;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.repository.PurchaseOrderRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,18 +50,43 @@ public class PurchaseOrderService {
         ClientAggregate client = clientRepository.findById(clientId)
                 .orElseThrow(() -> ResourceNotFoundException.clientNotFound(clientId));
 
-        List<OrderItem> orderItem = request.orderItem().stream()
-                .map(itemRequest -> {
-                    Product product = productService.findById(itemRequest.productId())
-                            .orElseThrow(() -> ResourceNotFoundException.productNotFound(itemRequest.productId()));
-
-                    return new OrderItem(product, itemRequest.quantity());
-                })
-                .toList();
+        List<OrderItem> orderItem = getOrderItems(request);
 
         AddressAggregate address = addressService.findAddressById(request.addressId())
                 .orElseThrow(() -> ResourceNotFoundException.addressNotFoud(request.addressId()));
 
+        Voucher voucher = getVoucher(request);
+
+        CreditCardAggregate creditCard = creditCardService.findCreditCardById(request.creditCardId())
+                .orElseThrow(() -> ResourceNotFoundException.creditCardNotFound(request.creditCardId()));
+
+        PurchaseOrder purchaseOrder = createPurchaseOrder(orderItem, address, voucher, creditCard, client);
+
+        return PurchaseOrderResponse.fromEntity(purchaseOrderRepository.save(purchaseOrder));
+    }
+
+    private PurchaseOrder createPurchaseOrder(
+            List<OrderItem> orderItem,
+            AddressAggregate address,
+            Voucher voucher,
+            CreditCardAggregate creditCard,
+            ClientAggregate client
+    ) {
+        String purchaseOrderNumber = generatePurchaseOrderNumber();
+
+        PurchaseOrder purchaseOrder = new PurchaseOrder(
+                purchaseOrderNumber,
+                new BigDecimal("10")
+        );
+        orderItem.forEach(purchaseOrder::addItem);
+        purchaseOrder.setAddress(address);
+        purchaseOrder.applyVoucher(voucher);
+        purchaseOrder.setCreditCard(creditCard);
+        purchaseOrder.setClient(client);
+        return purchaseOrder;
+    }
+
+    private Voucher getVoucher(CreatePurchaseOrderRequest request) {
         Voucher voucher = null;
         if (!request.voucher().isBlank()) {
             Voucher findedVoucher = voucherService.findVoucherByIdentifier(request.voucher())
@@ -72,26 +101,32 @@ public class PurchaseOrderService {
             }
             voucher = findedVoucher;
         }
+        return voucher;
+    }
 
-        CreditCardAggregate creditCard = creditCardService.findCreditCardById(request.creditCardId())
-                .orElseThrow(() -> ResourceNotFoundException.creditCardNotFound(request.creditCardId()));
+    private List<OrderItem> getOrderItems(CreatePurchaseOrderRequest request) {
+        return request.orderItem().stream()
+                .map(itemRequest -> {
+                    Product product = productService.findById(itemRequest.productId())
+                            .orElseThrow(() -> ResourceNotFoundException.productNotFound(itemRequest.productId()));
 
-        String purchaseOrderNumber = generatePurchaseOrderNumber();
-
-        PurchaseOrder purchaseOrder = new PurchaseOrder(
-                purchaseOrderNumber,
-                new BigDecimal("10")
-        );
-        orderItem.forEach(purchaseOrder::addItem);
-        purchaseOrder.setAddress(address);
-        purchaseOrder.applyVoucher(voucher);
-        purchaseOrder.setCreditCard(creditCard);
-        purchaseOrder.setClient(client);
-
-        return PurchaseOrderResponse.fromEntity(purchaseOrderRepository.save(purchaseOrder));
+                    return new OrderItem(product, itemRequest.quantity());
+                })
+                .toList();
     }
 
     private String generatePurchaseOrderNumber() {
         return String.format("PED-%d",  System.currentTimeMillis());
+    }
+
+    public Page<PurchaseOrderResponse> findAllByClient(Integer clientId, int page, int size) {
+        ClientAggregate client = this.clientRepository.findById(clientId)
+                .orElseThrow(() -> ResourceNotFoundException.clientNotFound(clientId));
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<PurchaseOrder> orders = this.purchaseOrderRepository.findAllByClientOrderByCreatedAtDesc(client, pageable);
+
+        return orders.map(PurchaseOrderResponse::fromEntity);
     }
 }

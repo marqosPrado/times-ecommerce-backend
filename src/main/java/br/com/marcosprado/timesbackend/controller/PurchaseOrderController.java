@@ -5,15 +5,16 @@ import br.com.marcosprado.timesbackend.dto.PurchaseOrderResponse;
 import br.com.marcosprado.timesbackend.dto.response.ApiResponse;
 import br.com.marcosprado.timesbackend.service.PurchaseOrderService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/orders")
+@CrossOrigin(origins = "*")
 public class PurchaseOrderController {
 
     private final PurchaseOrderService purchaseOrderService;
@@ -31,5 +32,15 @@ public class PurchaseOrderController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.created(response));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<Page<PurchaseOrderResponse>>>  getAllOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<PurchaseOrderResponse> response = purchaseOrderService.findAllByClient(1, page, size);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }
