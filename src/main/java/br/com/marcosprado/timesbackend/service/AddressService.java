@@ -8,6 +8,8 @@ import br.com.marcosprado.timesbackend.repository.AddressRepository;
 import br.com.marcosprado.timesbackend.repository.StateRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class AddressService {
@@ -43,5 +45,9 @@ public class AddressService {
         newAddress.setClient(client);
 
         return AddressDto.fromEntity(this.addressRepository.save(newAddress));
+    }
+
+    public Optional<AddressAggregate> findAddressById(Integer addressId) {
+        return addressRepository.findById(addressId);
     }
 }

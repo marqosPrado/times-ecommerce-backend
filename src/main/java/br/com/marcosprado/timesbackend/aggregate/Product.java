@@ -27,6 +27,7 @@ public class Product {
     private BigDecimal price;
 
     @Column(name = "gender", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column(name = "line", nullable = false)

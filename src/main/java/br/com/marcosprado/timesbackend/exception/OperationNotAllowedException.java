@@ -1,7 +1,5 @@
 package br.com.marcosprado.timesbackend.exception;
 
-import org.springframework.http.HttpStatus;
-
 /**
  * Thrown when operation is not allowed
  */
@@ -19,6 +17,12 @@ public class OperationNotAllowedException extends BusinessException {
     public static OperationNotAllowedException cannotUpdateExpiredVoucher(String identifier) {
         return new OperationNotAllowedException(
                 String.format("Não é possível atualizar o cupom '%s' pois está expirado.", identifier)
+        );
+    }
+
+    public static OperationNotAllowedException cannotUseInvalidVoucher() {
+        return new OperationNotAllowedException(
+                "Não é possível utilizar um voucher inválido"
         );
     }
 }

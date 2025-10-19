@@ -32,4 +32,8 @@ public class VoucherService {
 
         return VoucherResponse.fromEntity(saved);
     }
+
+    public Optional<Voucher> findVoucherByIdentifier(String identifier) {
+        return repository.findVoucherByIdentifier(identifier);
+    }
 }

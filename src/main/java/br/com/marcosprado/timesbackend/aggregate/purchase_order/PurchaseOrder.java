@@ -1,6 +1,7 @@
 package br.com.marcosprado.timesbackend.aggregate.purchase_order;
 
 import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
+import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
 import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.aggregate.Voucher;
 import jakarta.persistence.*;
@@ -19,7 +20,7 @@ public class PurchaseOrder {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(length = 10, nullable = false, unique = true)
+    @Column(length = 18, nullable = false, unique = true)
     private String purchaseOrderNumber;
 
     @Column(nullable = false)
@@ -64,6 +65,10 @@ public class PurchaseOrder {
     @JoinColumn(name = "credit_card_id", referencedColumnName = "crd_id")
     private CreditCardAggregate creditCard;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", referencedColumnName = "cli_id")
+    private ClientAggregate client;
+
     public PurchaseOrder() {
     }
 
@@ -80,7 +85,8 @@ public class PurchaseOrder {
             Set<OrderItem> items,
             AddressAggregate address,
             Voucher voucher,
-            CreditCardAggregate creditCard
+            CreditCardAggregate creditCard,
+            ClientAggregate client
     ) {
         this.id = id;
         this.purchaseOrderNumber = purchaseOrderNumber;
@@ -95,16 +101,17 @@ public class PurchaseOrder {
         this.address = address;
         this.voucher = voucher;
         this.creditCard = creditCard;
+        this.client = client;
     }
 
-    public PurchaseOrder(String purchaseOrderNumber) {
+    public PurchaseOrder(String purchaseOrderNumber, BigDecimal deliveryFee) {
         this.purchaseOrderNumber = purchaseOrderNumber;
         this.orderStatus = OrderStatus.PROCESSING;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.subTotal = BigDecimal.ZERO;
         this.discount = BigDecimal.ZERO;
-        this.deliveryFee = BigDecimal.ZERO;
+        this.deliveryFee = deliveryFee;
         this.total = BigDecimal.ZERO;
     }
 
@@ -229,6 +236,9 @@ public class PurchaseOrder {
     }
 
     public void setAddress(AddressAggregate address) {
+        if (address == null) {
+            throw new IllegalArgumentException("Endereço não deve ser nulo");
+        }
         this.address = address;
     }
 
@@ -246,5 +256,14 @@ public class PurchaseOrder {
 
     public void setCreditCard(CreditCardAggregate creditCard) {
         this.creditCard = creditCard;
+    }
+
+    public ClientAggregate getClient() {
+        return client;
+    }
+
+    public void setClient(ClientAggregate client) {
+        if (client == null) throw new IllegalArgumentException("Cliente não deve ser nulo");
+        this.client = client;
     }
 }

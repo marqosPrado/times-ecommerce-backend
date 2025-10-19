@@ -13,6 +13,7 @@ public class ClientAggregate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cli_id")
     private Integer id;
 
     @Column(name = "cli_full_name", length = 50, nullable = false)

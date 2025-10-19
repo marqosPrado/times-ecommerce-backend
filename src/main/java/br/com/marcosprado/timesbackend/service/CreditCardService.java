@@ -7,6 +7,7 @@ import br.com.marcosprado.timesbackend.repository.CreditCardRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CreditCardService {
@@ -43,5 +44,9 @@ public class CreditCardService {
         }
 
         return CreditCardDto.fromEntity(this.creditCardRepository.save(newCreditCard));
+    }
+
+    public Optional<CreditCardAggregate> findCreditCardById(Integer creditCardId) {
+        return creditCardRepository.findById(creditCardId);
     }
 }
