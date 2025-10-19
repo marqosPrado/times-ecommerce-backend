@@ -125,7 +125,7 @@ public class PurchaseOrderService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        Page<PurchaseOrder> orders = this.purchaseOrderRepository.findAllByClientOrderByCreatedAtDesc(client, pageable);
+        Page<PurchaseOrder> orders = this.purchaseOrderRepository.findAllByClient(client, pageable);
 
         return orders.map(PurchaseOrderResponse::fromEntity);
     }
