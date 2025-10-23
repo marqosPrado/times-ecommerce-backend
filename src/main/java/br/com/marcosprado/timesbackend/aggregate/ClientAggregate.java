@@ -1,15 +1,20 @@
 package br.com.marcosprado.timesbackend.aggregate;
 
+import br.com.marcosprado.timesbackend.aggregate.client.UserRole;
 import br.com.marcosprado.timesbackend.enums.Gender;
 import br.com.marcosprado.timesbackend.enums.TypePhoneNumber;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Entity(name = "CLIENTS")
-public class ClientAggregate {
+public class ClientAggregate implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +49,10 @@ public class ClientAggregate {
 
     @Column(name = "cli_is_active", nullable = false)
     private Boolean active;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role = UserRole.CLIENT;
 
     @Column(name = "cli_credit", precision = 15, scale = 2, nullable = false)
     private BigDecimal credit;
@@ -136,8 +145,23 @@ public class ClientAggregate {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
     }
 
     public void setPassword(String password) {
@@ -158,10 +182,6 @@ public class ClientAggregate {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public Boolean isActive() {
-        return active;
     }
 
     public void setActive(Boolean active) {
