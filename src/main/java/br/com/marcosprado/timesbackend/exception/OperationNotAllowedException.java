@@ -25,4 +25,10 @@ public class OperationNotAllowedException extends BusinessException {
                 "Não é possível utilizar um voucher inválido"
         );
     }
+
+    public static OperationNotAllowedException invalidCredentials() {
+        return new  OperationNotAllowedException(
+                "E-mail ou senha inválidos"
+        );
+    }
 }

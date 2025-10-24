@@ -10,11 +10,15 @@ import br.com.marcosprado.timesbackend.dto.authentication.AuthenticationResponse
 import br.com.marcosprado.timesbackend.dto.authentication.LoginRequest;
 import br.com.marcosprado.timesbackend.dto.authentication.UserRegisterRequest;
 import br.com.marcosprado.timesbackend.dto.client.response.UserInfoResponse;
+import br.com.marcosprado.timesbackend.exception.OperationNotAllowedException;
+import br.com.marcosprado.timesbackend.exception.ResourceAlreadyExistsException;
 import br.com.marcosprado.timesbackend.exception.ResourceNotFoundException;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.repository.StateRepository;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +52,7 @@ public class AuthenticationService {
     @Transactional
     public AuthenticationResponse register(UserRegisterRequest dto) {
         if (clientRepository.existsByCpf(dto.cpf()) || clientRepository.existsByEmail(dto.email())) {
-            throw new RuntimeException("Client already exists");
+            throw ResourceAlreadyExistsException.userAlreadyExists();
         }
 
         ClientAggregate client = new ClientAggregate();
@@ -57,7 +61,7 @@ public class AuthenticationService {
         client.setCpf(dto.cpf());
         client.setGender(dto.gender());
         client.setEmail(dto.email());
-        client.setPassword(dto.password());
+        client.setPassword(passwordEncoder.encode(dto.password()));
         client.setTypePhoneNumber(dto.typePhoneNumber());
         client.setPhoneNumber(dto.phoneNumber());
         client.setActive(true);
@@ -115,12 +119,17 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
-        );
+        try {
+
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.email(),
+                            request.password()
+                    )
+            );
+        } catch (AuthenticationException exception) {
+            throw OperationNotAllowedException.invalidCredentials();
+        }
 
         var client = clientRepository.findByEmail(request.email())
                 .orElseThrow(() -> ResourceNotFoundException.userNotFound(request.email()));

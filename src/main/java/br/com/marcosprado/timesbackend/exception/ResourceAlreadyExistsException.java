@@ -15,4 +15,10 @@ public class ResourceAlreadyExistsException extends BusinessException {
                 String.format("Cupom com o identificador '%s' já está cadastrado.", identifier)
         );
     }
+
+    public static ResourceAlreadyExistsException userAlreadyExists() {
+        return new ResourceAlreadyExistsException(
+                "Usuário já cadastrado."
+        );
+    }
 }
