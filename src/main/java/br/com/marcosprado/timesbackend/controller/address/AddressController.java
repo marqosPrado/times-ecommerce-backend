@@ -2,11 +2,13 @@ package br.com.marcosprado.timesbackend.controller.address;
 
 import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.service.AddressService;
+import br.com.marcosprado.timesbackend.util.SecurityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/address")
 @CrossOrigin(origins = "*")
 public class AddressController {
     private final AddressService service;
@@ -15,18 +17,21 @@ public class AddressController {
         this.service = service;
     }
 
-    @GetMapping("/address/client/{id}/get")
-    public ResponseEntity<AddressDto[]> getAddress(@PathVariable("id") String id) {
+    @GetMapping("/client/get")
+    public ResponseEntity<AddressDto[]> getAddress() {
+        Integer clientId = SecurityUtils.getCurrentUserId();
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(service.getAllAddressByClientId(id));
+                .body(service.getAllAddressByClientId(clientId));
     }
 
-    @PostMapping("/address/client/{id}/new")
+    @PostMapping("/client/new")
     public ResponseEntity<AddressDto> newAddress(
-            @RequestBody AddressDto addressDto,
-            @PathVariable("id") String id
+            @RequestBody AddressDto addressDto
     ) {
+        Integer clientId = SecurityUtils.getCurrentUserId();
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.registerAddress(addressDto, id));
+                .body(service.registerAddress(addressDto, clientId));
     }
 }

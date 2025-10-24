@@ -19,16 +19,16 @@ public class CreditCardService {
         this.creditCardRepository = creditCardRepository;
     }
 
-    public CreditCardDto[] getAllCreditCardsByClientId(String clientId) {
+    public CreditCardDto[] getAllCreditCardsByClientId(Integer clientId) {
         this.clientService.findClientById(clientId)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
         return CreditCardDto.fromEntities(
-                this.creditCardRepository.findAllById(Integer.parseInt(clientId))
+                this.creditCardRepository.findAllById(clientId)
         );
     }
 
-    public CreditCardDto registerCreditCard(CreditCardDto creditCardDto, String clientId) {
+    public CreditCardDto registerCreditCard(CreditCardDto creditCardDto, Integer clientId) {
         ClientAggregate clientAggregate = this.clientService.findClientById(clientId)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
@@ -36,7 +36,7 @@ public class CreditCardService {
         newCreditCard.setClient(clientAggregate);
 
         if (newCreditCard.getMain()) {
-            List<CreditCardAggregate> creditCards = this.creditCardRepository.findAllById(Integer.parseInt(clientId));
+            List<CreditCardAggregate> creditCards = this.creditCardRepository.findAllById(clientId);
             creditCards.forEach(creditCard -> {
                 creditCard.setMain(false);
                 creditCardRepository.save(creditCard);

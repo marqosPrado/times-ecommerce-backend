@@ -40,4 +40,16 @@ public class ResourceNotFoundException extends BusinessException {
                 String.format("Cartão de crédito com o id '%d' não foi encontrado", creditCardId)
         );
     }
+
+    public static ResourceNotFoundException userNotFound(String email) {
+        return new ResourceNotFoundException(
+                String.format("Usuário não encontrado com o email '%s'.", email)
+        );
+    }
+
+    public static ResourceNotFoundException userNotFound() {
+        return new ResourceNotFoundException(
+                "Usuário não encontrado."
+        );
+    }
 }

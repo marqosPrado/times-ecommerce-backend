@@ -6,7 +6,7 @@ import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.aggregate.StateAggregate;
 import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.dto.CreditCardDto;
-import br.com.marcosprado.timesbackend.dto.client.request.ClientDto;
+import br.com.marcosprado.timesbackend.dto.authentication.UserRegisterRequest;
 import br.com.marcosprado.timesbackend.dto.client.request.UpdateBasicDataClient;
 import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseCompleteDto;
 import br.com.marcosprado.timesbackend.repository.AddressRepository;
@@ -39,7 +39,7 @@ public class ClientService {
     }
 
     @Transactional
-    public ClientAggregate registerClient(ClientDto dto) {
+    public ClientAggregate registerClient(UserRegisterRequest dto) {
         if (clientRepository.existsByCpf(dto.cpf()) || clientRepository.existsByEmail(dto.email())) {
             throw new RuntimeException("Client already exists");
         }
@@ -215,7 +215,7 @@ public class ClientService {
         return ClientResponseCompleteDto.fromEntity(client);
     }
 
-    public Optional<ClientAggregate> findClientById(String clientId) {
-        return this.clientRepository.findById(Integer.parseInt(clientId));
+    public Optional<ClientAggregate> findClientById(Integer clientId) {
+        return this.clientRepository.findById(clientId);
     }
 }

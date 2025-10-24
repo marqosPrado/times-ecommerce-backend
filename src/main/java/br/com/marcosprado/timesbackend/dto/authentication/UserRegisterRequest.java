@@ -1,4 +1,4 @@
-package br.com.marcosprado.timesbackend.dto.client.request;
+package br.com.marcosprado.timesbackend.dto.authentication;
 
 import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.dto.CreditCardDto;
@@ -8,7 +8,7 @@ import br.com.marcosprado.timesbackend.enums.TypePhoneNumber;
 import java.time.LocalDate;
 import java.util.List;
 
-public record ClientDto(
+public record UserRegisterRequest(
         String fullName,
         LocalDate birthDate,
         String cpf,

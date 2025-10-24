@@ -2,7 +2,7 @@ package br.com.marcosprado.timesbackend.controller.admin;
 
 import br.com.marcosprado.timesbackend.dto.admin.ClientFilterDto;
 import br.com.marcosprado.timesbackend.dto.admin.UpdateClientStatusDto;
-import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseDto;
+import br.com.marcosprado.timesbackend.dto.client.response.UserInfoResponse;
 import br.com.marcosprado.timesbackend.service.AdminService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController()
+@RequestMapping("/api/admin")
 @CrossOrigin(origins = "*")
 public class AdminController {
 
@@ -22,8 +23,8 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @GetMapping("admin/client/search")
-    public ResponseEntity<Page<ClientResponseDto>> filterClient(
+    @GetMapping("/client/search")
+    public ResponseEntity<Page<UserInfoResponse>> filterClient(
             @ModelAttribute ClientFilterDto filter,
             Pageable pageable
     ) throws Exception {
@@ -34,12 +35,12 @@ public class AdminController {
         }
     }
 
-    @PatchMapping("admin/client/{id}/status")
+    @PatchMapping("/client/{id}/status")
     public ResponseEntity<?> updateClientStatus(
             @PathVariable("id") Integer id,
             @RequestBody UpdateClientStatusDto dto) {
         try {
-            ClientResponseDto updatedClient = adminService.updateStatus(id, dto);
+            UserInfoResponse updatedClient = adminService.updateStatus(id, dto);
             return ResponseEntity.ok(updatedClient);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

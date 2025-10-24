@@ -3,7 +3,7 @@ package br.com.marcosprado.timesbackend.service;
 import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
 import br.com.marcosprado.timesbackend.dto.admin.ClientFilterDto;
 import br.com.marcosprado.timesbackend.dto.admin.UpdateClientStatusDto;
-import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseDto;
+import br.com.marcosprado.timesbackend.dto.client.response.UserInfoResponse;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.specification.ClientSpecification;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,7 +22,7 @@ public class AdminService {
         this.clientRepository = clientRepository;
     }
 
-    public Page<ClientResponseDto> search(ClientFilterDto filter, Pageable pageable) {
+    public Page<UserInfoResponse> search(ClientFilterDto filter, Pageable pageable) {
 
         Specification<ClientAggregate> spec = Specification
                 .where(ClientSpecification.hasName(filter.name()))
@@ -34,11 +34,11 @@ public class AdminService {
 
         Page<ClientAggregate> clientPage = clientRepository.findAll(spec, pageable);
 
-        return clientPage.map(ClientResponseDto::from);
+        return clientPage.map(UserInfoResponse::from);
     }
 
     @Transactional
-    public ClientResponseDto updateStatus(Integer id, UpdateClientStatusDto dto) {
+    public UserInfoResponse updateStatus(Integer id, UpdateClientStatusDto dto) {
         ClientAggregate client = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente com ID " + id + " não encontrado."));
 
@@ -46,6 +46,6 @@ public class AdminService {
 
         ClientAggregate updatedClient = clientRepository.save(client);
 
-        return ClientResponseDto.from(updatedClient);
+        return UserInfoResponse.from(updatedClient);
     }
 }

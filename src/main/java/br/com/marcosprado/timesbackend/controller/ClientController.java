@@ -3,7 +3,7 @@ package br.com.marcosprado.timesbackend.controller;
 import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
 import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.dto.CreditCardDto;
-import br.com.marcosprado.timesbackend.dto.client.request.ClientDto;
+import br.com.marcosprado.timesbackend.dto.authentication.UserRegisterRequest;
 import br.com.marcosprado.timesbackend.dto.client.request.UpdateBasicDataClient;
 import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseCompleteDto;
 import br.com.marcosprado.timesbackend.service.ClientService;
@@ -22,7 +22,7 @@ public class ClientController {
     }
 
     @PostMapping("/client/register")
-    public ResponseEntity<ClientAggregate> register(@RequestBody ClientDto clientRegisterDto) {
+    public ResponseEntity<ClientAggregate> register(@RequestBody UserRegisterRequest clientRegisterDto) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(clientService.registerClient(clientRegisterDto));

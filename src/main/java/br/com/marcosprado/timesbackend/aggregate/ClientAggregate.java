@@ -164,6 +164,14 @@ public class ClientAggregate implements UserDetails {
         return active;
     }
 
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }

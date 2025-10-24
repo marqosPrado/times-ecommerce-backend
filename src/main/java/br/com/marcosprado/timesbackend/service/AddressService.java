@@ -6,6 +6,7 @@ import br.com.marcosprado.timesbackend.aggregate.StateAggregate;
 import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.repository.AddressRepository;
 import br.com.marcosprado.timesbackend.repository.StateRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,14 +28,14 @@ public class AddressService {
         this.clientService = clientService;
     }
 
-    public AddressDto[] getAllAddressByClientId(String clientId) {
+    public AddressDto[] getAllAddressByClientId(Integer clientId) {
         this.clientService.findClientById(clientId)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
         return AddressDto.fromEntities(addressRepository.findAll());
     }
 
-    public AddressDto registerAddress(AddressDto addressDto, String clientId) {
+    public AddressDto registerAddress(AddressDto addressDto, Integer clientId) {
         ClientAggregate client = this.clientService.findClientById(clientId)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
