@@ -4,7 +4,6 @@ import br.com.marcosprado.timesbackend.dto.CreateVoucherRequest;
 import br.com.marcosprado.timesbackend.dto.VoucherResponse;
 import br.com.marcosprado.timesbackend.dto.response.ApiResponse;
 import br.com.marcosprado.timesbackend.service.VoucherService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
