@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PurchaseOrderService {
@@ -57,10 +59,14 @@ public class PurchaseOrderService {
 
         Voucher voucher = getVoucher(request);
 
-        CreditCardAggregate creditCard = creditCardService.findCreditCardById(request.creditCardId())
-                .orElseThrow(() -> ResourceNotFoundException.creditCardNotFound(request.creditCardId()));
+        Set<CreditCardAggregate> creditCards = request.creditCardId() != null
+                ? request.creditCardId().stream()
+                .map(id -> creditCardService.findCreditCardById(id)
+                        .orElseThrow(() -> ResourceNotFoundException.creditCardNotFound(id)))
+                .collect(Collectors.toSet())
+                : Set.of();
 
-        PurchaseOrder purchaseOrder = createPurchaseOrder(orderItem, address, voucher, creditCard, client);
+        PurchaseOrder purchaseOrder = createPurchaseOrder(orderItem, address, voucher, creditCards, client);
 
         return PurchaseOrderResponse.fromEntity(purchaseOrderRepository.save(purchaseOrder));
     }
@@ -69,7 +75,7 @@ public class PurchaseOrderService {
             List<OrderItem> orderItem,
             AddressAggregate address,
             Voucher voucher,
-            CreditCardAggregate creditCard,
+            Set<CreditCardAggregate> creditCard,
             ClientAggregate client
     ) {
         String purchaseOrderNumber = generatePurchaseOrderNumber();

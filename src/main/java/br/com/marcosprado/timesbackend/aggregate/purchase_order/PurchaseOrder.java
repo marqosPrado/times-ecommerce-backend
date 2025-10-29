@@ -61,9 +61,13 @@ public class PurchaseOrder {
     @JoinColumn(name = "voucher_id", referencedColumnName = "vou_id")
     private Voucher voucher;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "credit_card_id", referencedColumnName = "crd_id")
-    private CreditCardAggregate creditCard;
+    @ManyToMany
+    @JoinTable(
+            name = "credit_card_purchase_order",
+            joinColumns = @JoinColumn(name = "purchase_order"),
+            inverseJoinColumns = @JoinColumn(name = "credit_card")
+    )
+    private Set<CreditCardAggregate> creditCard;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", referencedColumnName = "cli_id")
@@ -85,7 +89,7 @@ public class PurchaseOrder {
             Set<OrderItem> items,
             AddressAggregate address,
             Voucher voucher,
-            CreditCardAggregate creditCard,
+            Set<CreditCardAggregate> creditCard,
             ClientAggregate client
     ) {
         this.id = id;
@@ -250,11 +254,11 @@ public class PurchaseOrder {
         this.voucher = voucher;
     }
 
-    public CreditCardAggregate getCreditCard() {
+    public Set<CreditCardAggregate> getCreditCard() {
         return creditCard;
     }
 
-    public void setCreditCard(CreditCardAggregate creditCard) {
+    public void setCreditCard(Set<CreditCardAggregate> creditCard) {
         this.creditCard = creditCard;
     }
 

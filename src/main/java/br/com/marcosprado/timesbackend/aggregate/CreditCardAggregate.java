@@ -36,7 +36,7 @@ public class CreditCardAggregate {
     @JsonIgnore
     private ClientAggregate client;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "creditCard")
     private Set<PurchaseOrder> purchaseOrders;
 
     public CreditCardAggregate() {}

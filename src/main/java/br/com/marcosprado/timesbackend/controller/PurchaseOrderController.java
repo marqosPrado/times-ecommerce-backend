@@ -4,6 +4,7 @@ import br.com.marcosprado.timesbackend.dto.CreatePurchaseOrderRequest;
 import br.com.marcosprado.timesbackend.dto.PurchaseOrderResponse;
 import br.com.marcosprado.timesbackend.dto.response.ApiResponse;
 import br.com.marcosprado.timesbackend.service.PurchaseOrderService;
+import br.com.marcosprado.timesbackend.util.SecurityUtils;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,9 @@ public class PurchaseOrderController {
     public ResponseEntity<ApiResponse<PurchaseOrderResponse>> createOrder(
             @Valid @RequestBody CreatePurchaseOrderRequest request
     ) {
-        PurchaseOrderResponse response = purchaseOrderService.create(request, 1);
+        Integer clientId = SecurityUtils.getCurrentUserId();
+
+        PurchaseOrderResponse response = purchaseOrderService.create(request, clientId);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

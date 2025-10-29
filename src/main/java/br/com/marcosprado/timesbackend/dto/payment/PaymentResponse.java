@@ -5,20 +5,28 @@ import br.com.marcosprado.timesbackend.dto.credit_card.CreditCardSummaryResponse
 import br.com.marcosprado.timesbackend.dto.voucher.VoucherSummaryResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public record PaymentResponse(
         @JsonProperty("credit_card")
-        CreditCardSummaryResponse creditCard,
+        Set<CreditCardSummaryResponse> creditCard,
 
         @JsonProperty("voucher")
         VoucherSummaryResponse voucher
 ) {
 
     public static PaymentResponse from(PurchaseOrder order) {
-        return new PaymentResponse(
-                CreditCardSummaryResponse.fromEntity(order.getCreditCard()),
-                order.getVoucher() != null
-                        ? VoucherSummaryResponse.fromEntity(order.getVoucher())
-                        : null
-        );
+        Set<CreditCardSummaryResponse> creditCards = order.getCreditCard() != null
+                ? order.getCreditCard().stream()
+                .map(CreditCardSummaryResponse::fromEntity)
+                .collect(Collectors.toSet())
+                : Set.of();
+
+        VoucherSummaryResponse voucherResponse = order.getVoucher() != null
+                ? VoucherSummaryResponse.fromEntity(order.getVoucher())
+                : null;
+
+        return new PaymentResponse(creditCards, voucherResponse);
     }
 }
