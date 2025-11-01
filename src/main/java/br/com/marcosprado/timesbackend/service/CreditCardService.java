@@ -20,11 +20,11 @@ public class CreditCardService {
     }
 
     public CreditCardDto[] getAllCreditCardsByClientId(Integer clientId) {
-        this.clientService.findClientById(clientId)
+        var client = this.clientService.findClientById(clientId)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
         return CreditCardDto.fromEntities(
-                this.creditCardRepository.findAllById(clientId)
+                this.creditCardRepository.findAllByClient(client)
         );
     }
 

@@ -1,8 +1,11 @@
 package br.com.marcosprado.timesbackend.service;
 
 import br.com.marcosprado.timesbackend.aggregate.Product;
+import br.com.marcosprado.timesbackend.dto.ProductSummaryResponse;
 import br.com.marcosprado.timesbackend.dto.product.request.ProductFilterRequest;
+import br.com.marcosprado.timesbackend.dto.product.response.ProductDetailResponse;
 import br.com.marcosprado.timesbackend.dto.product.response.ProductFilterResponse;
+import br.com.marcosprado.timesbackend.exception.ResourceNotFoundException;
 import br.com.marcosprado.timesbackend.repository.ProductRepository;
 import br.com.marcosprado.timesbackend.specification.product.ProductSpecification;
 import org.springframework.data.domain.Page;
@@ -24,6 +27,13 @@ public class ProductService {
 
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
+    }
+
+    public ProductDetailResponse findByIdWithException(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.productNotFound(id));
+
+        return ProductDetailResponse.fromEntity(product);
     }
 
     public Page<ProductFilterResponse> findAll(ProductFilterRequest request, int page, int size) {
