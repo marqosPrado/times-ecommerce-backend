@@ -1,6 +1,6 @@
 package br.com.marcosprado.timesbackend.service;
 
-import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.dto.admin.ClientFilterDto;
 import br.com.marcosprado.timesbackend.dto.admin.UpdateClientStatusDto;
 import br.com.marcosprado.timesbackend.dto.client.response.UserInfoResponse;

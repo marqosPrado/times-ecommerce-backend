@@ -1,5 +1,6 @@
 package br.com.marcosprado.timesbackend.aggregate;
 
+import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import br.com.marcosprado.timesbackend.enums.CardFlag;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -1,6 +1,6 @@
 package br.com.marcosprado.timesbackend.specification;
 
-import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.enums.Gender;
 import org.springframework.data.jpa.domain.Specification;
 

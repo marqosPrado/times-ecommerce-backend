@@ -1,6 +1,7 @@
 package br.com.marcosprado.timesbackend.service;
 
 import br.com.marcosprado.timesbackend.aggregate.*;
+import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.aggregate.purchase_order.OrderItem;
 import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import br.com.marcosprado.timesbackend.dto.CreatePurchaseOrderRequest;

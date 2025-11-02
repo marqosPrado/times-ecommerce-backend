@@ -1,7 +1,7 @@
 package br.com.marcosprado.timesbackend.service.authentication;
 
 import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
-import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.aggregate.StateAggregate;
 import br.com.marcosprado.timesbackend.dto.AddressDto;
@@ -16,7 +16,6 @@ import br.com.marcosprado.timesbackend.exception.ResourceNotFoundException;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.repository.StateRepository;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;

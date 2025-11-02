@@ -1,12 +1,11 @@
 package br.com.marcosprado.timesbackend.service;
 
 import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
-import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.aggregate.StateAggregate;
 import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.repository.AddressRepository;
 import br.com.marcosprado.timesbackend.repository.StateRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

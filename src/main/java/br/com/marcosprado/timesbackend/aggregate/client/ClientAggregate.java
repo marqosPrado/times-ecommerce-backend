@@ -1,6 +1,8 @@
-package br.com.marcosprado.timesbackend.aggregate;
+package br.com.marcosprado.timesbackend.aggregate.client;
 
-import br.com.marcosprado.timesbackend.aggregate.client.UserRole;
+import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
+import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
+import br.com.marcosprado.timesbackend.aggregate.exchange_request.ExchangeRequest;
 import br.com.marcosprado.timesbackend.enums.Gender;
 import br.com.marcosprado.timesbackend.enums.TypePhoneNumber;
 import jakarta.persistence.*;
@@ -11,7 +13,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "CLIENTS")
 public class ClientAggregate implements UserDetails {
@@ -62,6 +66,9 @@ public class ClientAggregate implements UserDetails {
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CreditCardAggregate>  creditCards;
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private Set<ExchangeRequest> exchangeRequests = new HashSet<>();
 
     public ClientAggregate() {}
 

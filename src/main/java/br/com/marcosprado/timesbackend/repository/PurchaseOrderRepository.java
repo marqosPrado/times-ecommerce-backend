@@ -1,6 +1,6 @@
 package br.com.marcosprado.timesbackend.repository;
 
-import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

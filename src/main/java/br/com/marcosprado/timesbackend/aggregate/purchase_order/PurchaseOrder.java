@@ -1,9 +1,10 @@
 package br.com.marcosprado.timesbackend.aggregate.purchase_order;
 
 import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
-import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.aggregate.Voucher;
+import br.com.marcosprado.timesbackend.aggregate.exchange_request.ExchangeRequest;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -72,6 +73,13 @@ public class PurchaseOrder {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", referencedColumnName = "cli_id")
     private ClientAggregate client;
+
+    @OneToMany(
+            mappedBy = "purchaseOrder",
+            cascade = CascadeType.REMOVE,
+            fetch = FetchType.LAZY
+    )
+    private Set<ExchangeRequest> exchangeRequests = new HashSet<>();
 
     public PurchaseOrder() {
     }

@@ -1,6 +1,6 @@
 package br.com.marcosprado.timesbackend.dto.client.response;
 
-import br.com.marcosprado.timesbackend.aggregate.ClientAggregate;
+import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.dto.AddressDto;
 import br.com.marcosprado.timesbackend.dto.CreditCardDto;
 import br.com.marcosprado.timesbackend.enums.Gender;
