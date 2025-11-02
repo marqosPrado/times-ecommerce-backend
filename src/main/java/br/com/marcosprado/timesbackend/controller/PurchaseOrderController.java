@@ -40,7 +40,9 @@ public class PurchaseOrderController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<PurchaseOrderResponse> response = purchaseOrderService.findAllByClient(1, page, size);
+        Integer clientId = SecurityUtils.getCurrentUserId();
+
+        Page<PurchaseOrderResponse> response = purchaseOrderService.findAllByClient(clientId, page, size);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

@@ -61,6 +61,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/address/**").hasAnyRole("CLIENT", "ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/api/vouchers").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/vouchers/get").hasAnyRole("CLIENT", "ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()

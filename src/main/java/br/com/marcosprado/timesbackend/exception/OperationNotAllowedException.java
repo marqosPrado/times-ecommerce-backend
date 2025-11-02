@@ -31,4 +31,10 @@ public class OperationNotAllowedException extends BusinessException {
                 "E-mail ou senha inválidos"
         );
     }
+
+    public static OperationNotAllowedException cannotUseExpiredVoucher() {
+        return new OperationNotAllowedException(
+                "Cupom expirado"
+        );
+    }
 }
