@@ -177,10 +177,10 @@ public class PurchaseOrderService {
         return PurchaseOrderResponse.fromEntity(purchaseOrderRepository.save(purchaseOrder));
     }
 
-    public Page<PurchaseOrderSummaryResponse> findAll(int page, int size) {
+    public Page<PurchaseOrderResponse> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
         Page<PurchaseOrder> orders = this.purchaseOrderRepository.findAll(pageable);
-        return orders.map(PurchaseOrderSummaryResponse::fromEntity);
+        return orders.map(PurchaseOrderResponse::fromEntity);
     }
 }

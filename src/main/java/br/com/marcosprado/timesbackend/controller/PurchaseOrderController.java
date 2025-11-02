@@ -53,7 +53,7 @@ public class PurchaseOrderController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<Page<PurchaseOrderSummaryResponse>>> getAll(
+    public ResponseEntity<ApiResponse<Page<PurchaseOrderResponse>>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
