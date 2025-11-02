@@ -37,4 +37,10 @@ public class OperationNotAllowedException extends BusinessException {
                 "Cupom expirado"
         );
     }
+
+    public static OperationNotAllowedException requestDoesntBelongClient(String message) {
+        return new OperationNotAllowedException(
+                "O pedido: %s não pertence ao cliente"
+        );
+    }
 }

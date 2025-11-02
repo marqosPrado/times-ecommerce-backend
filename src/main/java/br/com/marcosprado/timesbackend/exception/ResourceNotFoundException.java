@@ -52,4 +52,16 @@ public class ResourceNotFoundException extends BusinessException {
                 "Usuário não encontrado."
         );
     }
+
+    public static ResourceNotFoundException purchaseOrderNotFound() {
+        return new ResourceNotFoundException(
+                "Order de compra não encontrada"
+        );
+    }
+
+    public static ResourceNotFoundException orderItemNotFound(Long itemId) {
+        return new ResourceNotFoundException(
+                String.format("Item de pedido com o id %d não foi encontrado", itemId)
+        );
+    }
 }
