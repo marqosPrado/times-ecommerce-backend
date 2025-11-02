@@ -9,6 +9,8 @@ import br.com.marcosprado.timesbackend.dto.CreditCardDto;
 import br.com.marcosprado.timesbackend.dto.authentication.UserRegisterRequest;
 import br.com.marcosprado.timesbackend.dto.client.request.UpdateBasicDataClient;
 import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseCompleteDto;
+import br.com.marcosprado.timesbackend.dto.client.response.UserInfoResponse;
+import br.com.marcosprado.timesbackend.exception.ResourceNotFoundException;
 import br.com.marcosprado.timesbackend.repository.AddressRepository;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.repository.StateRepository;
@@ -217,5 +219,12 @@ public class ClientService {
 
     public Optional<ClientAggregate> findClientById(Integer clientId) {
         return this.clientRepository.findById(clientId);
+    }
+
+    public UserInfoResponse getCurrentUser(Integer clientId) {
+        ClientAggregate client = findClientById(clientId)
+                .orElseThrow(ResourceNotFoundException::userNotFound);
+
+        return UserInfoResponse.from(client);
     }
 }

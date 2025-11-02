@@ -6,7 +6,10 @@ import br.com.marcosprado.timesbackend.dto.CreditCardDto;
 import br.com.marcosprado.timesbackend.dto.authentication.UserRegisterRequest;
 import br.com.marcosprado.timesbackend.dto.client.request.UpdateBasicDataClient;
 import br.com.marcosprado.timesbackend.dto.client.response.ClientResponseCompleteDto;
+import br.com.marcosprado.timesbackend.dto.client.response.UserInfoResponse;
+import br.com.marcosprado.timesbackend.dto.response.ApiResponse;
 import br.com.marcosprado.timesbackend.service.ClientService;
+import br.com.marcosprado.timesbackend.util.SecurityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,5 +82,13 @@ public class ClientController {
             @RequestBody AddressDto addressDto
     ) {
         return ResponseEntity.ok(clientService.updateAddress(clientId, addressId, addressDto));
+    }
+
+    @GetMapping("/api/client/me")
+    public ResponseEntity<ApiResponse<UserInfoResponse>> getCurrentUser() {
+        Integer clientId = SecurityUtils.getCurrentUserId();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(clientService.getCurrentUser(clientId)));
     }
 }

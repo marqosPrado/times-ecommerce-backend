@@ -2,6 +2,7 @@ package br.com.marcosprado.timesbackend.controller;
 
 import br.com.marcosprado.timesbackend.dto.CreatePurchaseOrderRequest;
 import br.com.marcosprado.timesbackend.dto.PurchaseOrderResponse;
+import br.com.marcosprado.timesbackend.dto.purchase_order.PurchaseOrderSummaryResponse;
 import br.com.marcosprado.timesbackend.dto.response.ApiResponse;
 import br.com.marcosprado.timesbackend.service.PurchaseOrderService;
 import br.com.marcosprado.timesbackend.util.SecurityUtils;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -46,6 +49,15 @@ public class PurchaseOrderController {
         Page<PurchaseOrderResponse> response = purchaseOrderService.findAllByClient(clientId, page, size);
 
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse<Page<PurchaseOrderSummaryResponse>>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(purchaseOrderService.findAll(page, size)));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

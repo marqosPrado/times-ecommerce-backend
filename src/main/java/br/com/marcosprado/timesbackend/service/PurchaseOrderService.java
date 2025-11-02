@@ -6,6 +6,7 @@ import br.com.marcosprado.timesbackend.aggregate.purchase_order.OrderItem;
 import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import br.com.marcosprado.timesbackend.dto.CreatePurchaseOrderRequest;
 import br.com.marcosprado.timesbackend.dto.PurchaseOrderResponse;
+import br.com.marcosprado.timesbackend.dto.purchase_order.PurchaseOrderSummaryResponse;
 import br.com.marcosprado.timesbackend.exception.OperationNotAllowedException;
 import br.com.marcosprado.timesbackend.exception.ResourceNotFoundException;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
@@ -174,5 +175,12 @@ public class PurchaseOrderService {
 
         purchaseOrder.markAsDelivered();
         return PurchaseOrderResponse.fromEntity(purchaseOrderRepository.save(purchaseOrder));
+    }
+
+    public Page<PurchaseOrderSummaryResponse> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<PurchaseOrder> orders = this.purchaseOrderRepository.findAll(pageable);
+        return orders.map(PurchaseOrderSummaryResponse::fromEntity);
     }
 }
