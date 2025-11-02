@@ -43,4 +43,10 @@ public class OperationNotAllowedException extends BusinessException {
                 "O pedido: %s não pertence ao cliente"
         );
     }
+
+    public static OperationNotAllowedException cannotExchangeOrderNotDelivered() {
+        return new OperationNotAllowedException(
+                "Pedido que não foi entregue não pode ser trocado"
+        );
+    }
 }

@@ -167,6 +167,10 @@ public class PurchaseOrder {
         }
     }
 
+    public boolean isDelivered() {
+        return orderStatus == OrderStatus.DELIVERED;
+    }
+
     public Long getId() {
         return id;
     }

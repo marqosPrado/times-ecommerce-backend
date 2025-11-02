@@ -47,6 +47,10 @@ public class ExchangeVoucherRequestService {
         PurchaseOrder purchaseOrder = this.purchaseOrderRepository.findById(purchaseOrderId)
                 .orElseThrow(ResourceNotFoundException::purchaseOrderNotFound);
 
+        if (!purchaseOrder.isDelivered()) {
+            throw OperationNotAllowedException.cannotExchangeOrderNotDelivered();
+        }
+
         ClientAggregate client = this.clientRepository.findById(clientId)
                 .orElseThrow(() -> ResourceNotFoundException.clientNotFound(clientId));
 
