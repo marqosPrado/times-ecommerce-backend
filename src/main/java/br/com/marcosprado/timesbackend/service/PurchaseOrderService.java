@@ -136,4 +136,43 @@ public class PurchaseOrderService {
 
         return orders.map(PurchaseOrderResponse::fromEntity);
     }
+
+    @Transactional
+    public PurchaseOrderResponse aprovePurchaseOrder(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id da ordem de compra não deve ser nulo");
+        }
+
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(id)
+                .orElseThrow(ResourceNotFoundException::purchaseOrderNotFound);
+
+        purchaseOrder.approvePurchaseOrder();
+        return PurchaseOrderResponse.fromEntity(purchaseOrderRepository.save(purchaseOrder));
+    }
+
+    @Transactional
+    public PurchaseOrderResponse markPurchaseOrderAsInTransit(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id da ordem de compra não deve ser nulo");
+        }
+
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(id)
+                .orElseThrow(ResourceNotFoundException::purchaseOrderNotFound);
+
+        purchaseOrder.markAsInTransit();
+        return PurchaseOrderResponse.fromEntity(purchaseOrderRepository.save(purchaseOrder));
+    }
+
+    @Transactional
+    public PurchaseOrderResponse markPurchaseOrderAsDelivered(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id da ordem de compra não deve ser nulo");
+        }
+
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(id)
+                .orElseThrow(ResourceNotFoundException::purchaseOrderNotFound);
+
+        purchaseOrder.markAsDelivered();
+        return PurchaseOrderResponse.fromEntity(purchaseOrderRepository.save(purchaseOrder));
+    }
 }

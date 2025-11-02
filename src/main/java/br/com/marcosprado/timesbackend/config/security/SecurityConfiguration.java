@@ -57,6 +57,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/products/**").permitAll()
 
                         .requestMatchers("/api/orders/**").hasAnyRole("CLIENT", "ADMIN")
+                        .requestMatchers("/api/orders/*/(approve|in-transit|delivered)").hasRole("ADMIN")
+
                         .requestMatchers("/api/credit-card/**").hasAnyRole("CLIENT", "ADMIN")
                         .requestMatchers("/api/address/**").hasAnyRole("CLIENT", "ADMIN")
 

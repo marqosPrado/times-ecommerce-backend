@@ -171,6 +171,30 @@ public class PurchaseOrder {
         return orderStatus == OrderStatus.DELIVERED;
     }
 
+    public void approvePurchaseOrder() {
+        if (orderStatus != OrderStatus.PROCESSING) {
+            throw new IllegalArgumentException("Apenas pedidos em processamento podem ser aprovados");
+        }
+
+        this.orderStatus = OrderStatus.APPROVED;
+    }
+
+    public void markAsInTransit() {
+        if (orderStatus != OrderStatus.APPROVED) {
+            throw new IllegalArgumentException("Apenas pedidos aprovados podem ser colocado em trânsito");
+        }
+
+        this.orderStatus = OrderStatus.IN_TRANSIT;
+    }
+
+    public void markAsDelivered() {
+        if (orderStatus != OrderStatus.IN_TRANSIT) {
+            throw new IllegalArgumentException("Apenas pedidos em trânsito podem ser definidos como entregue");
+        }
+
+        this.orderStatus = OrderStatus.DELIVERED;
+    }
+
     public Long getId() {
         return id;
     }

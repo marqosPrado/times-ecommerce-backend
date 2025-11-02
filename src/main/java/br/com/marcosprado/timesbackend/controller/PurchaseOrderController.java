@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -45,5 +46,37 @@ public class PurchaseOrderController {
         Page<PurchaseOrderResponse> response = purchaseOrderService.findAllByClient(clientId, page, size);
 
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/approve")
+    public ResponseEntity<ApiResponse<PurchaseOrderResponse>> markAsApprove(
+            @PathVariable String id) {
+        var response = ApiResponse.success(purchaseOrderService.aprovePurchaseOrder(Long.parseLong(id)));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/in-transit")
+    public ResponseEntity<ApiResponse<PurchaseOrderResponse>> markAsInTransit(
+            @PathVariable String id
+    ) {
+        var response = ApiResponse.success(purchaseOrderService.markPurchaseOrderAsInTransit(Long.parseLong(id)));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/delivered")
+    public ResponseEntity<ApiResponse<PurchaseOrderResponse>> markAsDelivered(
+            @PathVariable String id
+    ) {
+        var response = ApiResponse.success(purchaseOrderService.markPurchaseOrderAsDelivered(Long.parseLong(id)));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 }
