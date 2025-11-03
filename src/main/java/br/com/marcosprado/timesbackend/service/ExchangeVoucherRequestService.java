@@ -13,6 +13,10 @@ import br.com.marcosprado.timesbackend.repository.ClientRepository;
 import br.com.marcosprado.timesbackend.repository.ExchangeVoucherRequestRepository;
 import br.com.marcosprado.timesbackend.repository.OrderItemRepository;
 import br.com.marcosprado.timesbackend.repository.PurchaseOrderRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,5 +89,12 @@ public class ExchangeVoucherRequestService {
 
         ExchangeRequest saved = exchangeVoucherRequestRepository.save(exchangeRequest);
         return ExchangeRequestResponse.fromEntity(saved);
+    }
+
+    public Page<ExchangeRequestResponse> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("requestedAt").descending());
+
+        Page<ExchangeRequest> exchangeRequests = this.exchangeVoucherRequestRepository.findAll(pageable);
+        return exchangeRequests.map(ExchangeRequestResponse::fromEntity);
     }
 }
