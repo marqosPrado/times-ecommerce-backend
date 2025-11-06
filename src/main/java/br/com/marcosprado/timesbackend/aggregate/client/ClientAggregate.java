@@ -2,6 +2,7 @@ package br.com.marcosprado.timesbackend.aggregate.client;
 
 import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
 import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
+import br.com.marcosprado.timesbackend.aggregate.ExchangeRequestVoucher;
 import br.com.marcosprado.timesbackend.aggregate.exchange_request.ExchangeRequest;
 import br.com.marcosprado.timesbackend.enums.Gender;
 import br.com.marcosprado.timesbackend.enums.TypePhoneNumber;
@@ -69,6 +70,9 @@ public class ClientAggregate implements UserDetails {
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private Set<ExchangeRequest> exchangeRequests = new HashSet<>();
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private Set<ExchangeRequestVoucher> exchangeRequestVouchers = new HashSet<>();
 
     public ClientAggregate() {}
 

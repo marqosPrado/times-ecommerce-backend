@@ -96,7 +96,7 @@ public class PurchaseOrderService {
 
     private Voucher getVoucher(CreatePurchaseOrderRequest request) {
         Voucher voucher = null;
-        if (!request.voucher().isBlank()) {
+        if (!(request.voucher() == null)) {
             Voucher findedVoucher = voucherService.findVoucherByIdentifier(request.voucher())
                     .orElseThrow(() -> ResourceNotFoundException.voucherNotFound(request.voucher()));
 

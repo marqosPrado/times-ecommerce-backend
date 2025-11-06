@@ -195,6 +195,15 @@ public class PurchaseOrder {
         this.orderStatus = OrderStatus.DELIVERED;
     }
 
+    public void markAsExchangeProcess() {
+        if (orderStatus != OrderStatus.DELIVERED) {
+            throw new IllegalArgumentException("Apenas pedidos entregues podem ser trocados");
+        }
+
+        this.orderStatus = OrderStatus.EXCHANGE_REQUESTED;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public Long getId() {
         return id;
     }

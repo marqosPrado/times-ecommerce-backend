@@ -103,7 +103,7 @@ public class ExchangeRequest {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public void approve(String adminNotes) {
+    public void approve() {
         if (this.exchangeStatus != ExchangeStatus.PENDING) {
             throw new IllegalStateException("Apenas solicitações pendentes podem ser aprovadas");
         }
@@ -111,7 +111,7 @@ public class ExchangeRequest {
         this.processedAt = LocalDateTime.now();
     }
 
-    public void reject(String adminNotes) {
+    public void reject() {
         if (this.exchangeStatus != ExchangeStatus.PENDING) {
             throw new IllegalStateException("Apenas solicitações pendentes podem ser rejeitadas");
         }

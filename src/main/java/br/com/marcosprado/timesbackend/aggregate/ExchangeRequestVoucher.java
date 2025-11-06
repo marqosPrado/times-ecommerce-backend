@@ -1,5 +1,6 @@
 package br.com.marcosprado.timesbackend.aggregate;
 
+import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -35,16 +36,22 @@ public class ExchangeRequestVoucher {
     @Column(nullable = false)
     private boolean isActive;
 
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private ClientAggregate client;
+
     protected ExchangeRequestVoucher() {
     }
 
     public ExchangeRequestVoucher(
-            BigDecimal amount
+            BigDecimal amount,
+            ClientAggregate client
     ) {
         this.identifier = generateIdentifier();
         this.setAmount(amount);
         this.createdAt = LocalDateTime.now();
         this.isActive = true;
+        this.client = client;
     }
 
     private String generateIdentifier() {
@@ -102,5 +109,13 @@ public class ExchangeRequestVoucher {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public ClientAggregate getClient() {
+        return client;
+    }
+
+    public void setClient(ClientAggregate client) {
+        this.client = client;
     }
 }

@@ -64,4 +64,10 @@ public class ResourceNotFoundException extends BusinessException {
                 String.format("Item de pedido com o id %d não foi encontrado", itemId)
         );
     }
+
+    public static ResourceNotFoundException exchangeRequestNotFound() {
+        return new ResourceNotFoundException(
+                "Pedido de troca não encontrado"
+        );
+    }
 }

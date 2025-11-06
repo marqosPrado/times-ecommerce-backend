@@ -3,14 +3,13 @@ package br.com.marcosprado.timesbackend.service;
 import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.aggregate.exchange_request.ExchangeRequest;
 import br.com.marcosprado.timesbackend.aggregate.purchase_order.OrderItem;
-import br.com.marcosprado.timesbackend.aggregate.purchase_order.OrderStatus;
 import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import br.com.marcosprado.timesbackend.dto.exchange_voucher.request.CreateExchangeVoucherRequest;
 import br.com.marcosprado.timesbackend.dto.exchange_voucher.response.ExchangeRequestResponse;
 import br.com.marcosprado.timesbackend.exception.OperationNotAllowedException;
 import br.com.marcosprado.timesbackend.exception.ResourceNotFoundException;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
-import br.com.marcosprado.timesbackend.repository.ExchangeVoucherRequestRepository;
+import br.com.marcosprado.timesbackend.repository.ExchangeRequestRepository;
 import br.com.marcosprado.timesbackend.repository.OrderItemRepository;
 import br.com.marcosprado.timesbackend.repository.PurchaseOrderRepository;
 import org.springframework.data.domain.Page;
@@ -20,28 +19,30 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class ExchangeVoucherRequestService {
+public class ExchangeRequestService {
 
     private final ClientRepository clientRepository;
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final ExchangeVoucherRequestRepository exchangeVoucherRequestRepository;
+    private final ExchangeRequestRepository exchangeRequestRepository;
+    private final ExchangeRequestVoucherService exchangeRequestVoucherService;
 
-    public ExchangeVoucherRequestService(
+    public ExchangeRequestService(
             ClientRepository clientRepository,
             PurchaseOrderRepository purchaseOrderRepository,
             OrderItemRepository orderItemRepository,
-            ExchangeVoucherRequestRepository exchangeVoucherRequestRepository
+            ExchangeRequestRepository exchangeRequestRepository,
+            ExchangeRequestVoucherService exchangeRequestVoucherService
     ) {
         this.clientRepository = clientRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.orderItemRepository = orderItemRepository;
-        this.exchangeVoucherRequestRepository = exchangeVoucherRequestRepository;
+        this.exchangeRequestRepository = exchangeRequestRepository;
+        this.exchangeRequestVoucherService = exchangeRequestVoucherService;
     }
 
     @Transactional
@@ -83,18 +84,66 @@ public class ExchangeVoucherRequestService {
                 createExchangeVoucherRequest.exchangeType()
         );
 
-        purchaseOrder.setOrderStatus(OrderStatus.EXCHANGE_REQUESTED);
-        purchaseOrder.setUpdatedAt(LocalDateTime.now());
+        purchaseOrder.markAsExchangeProcess();
         purchaseOrderRepository.save(purchaseOrder);
 
-        ExchangeRequest saved = exchangeVoucherRequestRepository.save(exchangeRequest);
+        ExchangeRequest saved = exchangeRequestRepository.save(exchangeRequest);
         return ExchangeRequestResponse.fromEntity(saved);
     }
 
+    @Transactional
     public Page<ExchangeRequestResponse> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("requestedAt").descending());
 
-        Page<ExchangeRequest> exchangeRequests = this.exchangeVoucherRequestRepository.findAll(pageable);
+        Page<ExchangeRequest> exchangeRequests = this.exchangeRequestRepository.findAll(pageable);
         return exchangeRequests.map(ExchangeRequestResponse::fromEntity);
     }
+
+    @Transactional
+    public ExchangeRequestResponse approveExchange(Long exchangeId) {
+        ExchangeRequest exchangeRequest = this.exchangeRequestRepository.findById(exchangeId)
+                .orElseThrow(ResourceNotFoundException::exchangeRequestNotFound);
+
+        exchangeRequest.approve();
+        return ExchangeRequestResponse.fromEntity(this.exchangeRequestRepository.save(exchangeRequest));
+    }
+
+    @Transactional
+    public ExchangeRequestResponse rejectExchange(Long exchangeId) {
+        ExchangeRequest exchangeRequest = this.exchangeRequestRepository.findById(exchangeId)
+                .orElseThrow(ResourceNotFoundException::exchangeRequestNotFound);
+
+        exchangeRequest.reject();
+        return ExchangeRequestResponse.fromEntity(this.exchangeRequestRepository.save(exchangeRequest));
+    }
+
+    @Transactional
+    public ExchangeRequestResponse markAsInTransit(Long exchangeId) {
+        ExchangeRequest exchangeRequest = this.exchangeRequestRepository.findById(exchangeId)
+                .orElseThrow(ResourceNotFoundException::exchangeRequestNotFound);
+
+        exchangeRequest.markAsInTransit();
+        return ExchangeRequestResponse.fromEntity(this.exchangeRequestRepository.save(exchangeRequest));
+    }
+
+    @Transactional
+    public ExchangeRequestResponse confirmItemsReceived(Long exchangeId) {
+        ExchangeRequest exchangeRequest = this.exchangeRequestRepository.findById(exchangeId)
+                .orElseThrow(ResourceNotFoundException::exchangeRequestNotFound);
+
+        exchangeRequest.confirmItemsReceived();
+        return ExchangeRequestResponse.fromEntity(this.exchangeRequestRepository.save(exchangeRequest));
+    }
+
+    @Transactional
+    public ExchangeRequestResponse complete(Long exchangeId) {
+        ExchangeRequest exchangeRequest = this.exchangeRequestRepository.findById(exchangeId)
+                .orElseThrow(ResourceNotFoundException::exchangeRequestNotFound);
+
+        var exchangeRequestVoucher = this.exchangeRequestVoucherService.generate(exchangeRequest);
+
+        exchangeRequest.complete(exchangeRequestVoucher);
+        return ExchangeRequestResponse.fromEntity(this.exchangeRequestRepository.save(exchangeRequest));
+    }
+
 }
