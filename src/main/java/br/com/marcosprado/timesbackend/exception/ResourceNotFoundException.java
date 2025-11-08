@@ -70,4 +70,10 @@ public class ResourceNotFoundException extends BusinessException {
                 "Pedido de troca não encontrado"
         );
     }
+
+    public static ResourceNotFoundException exchangeRequestVoucherNotFound(Long id) {
+        return new ResourceNotFoundException(
+                String.format("Cupom de troca com o id: %d não foi encontrado", id)
+        );
+    }
 }

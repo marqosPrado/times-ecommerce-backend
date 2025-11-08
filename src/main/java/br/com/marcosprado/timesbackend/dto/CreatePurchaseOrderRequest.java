@@ -6,6 +6,7 @@ import java.util.Set;
 public record CreatePurchaseOrderRequest(
         List<PurchaseOrderItemDto> orderItem,
         int addressId,
+        Set<Long> exchangeVouchersId,
         Set<Integer> creditCardId,
         String voucher
 ) {

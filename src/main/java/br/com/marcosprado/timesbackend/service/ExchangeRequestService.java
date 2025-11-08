@@ -140,7 +140,7 @@ public class ExchangeRequestService {
         ExchangeRequest exchangeRequest = this.exchangeRequestRepository.findById(exchangeId)
                 .orElseThrow(ResourceNotFoundException::exchangeRequestNotFound);
 
-        var exchangeRequestVoucher = this.exchangeRequestVoucherService.generate(exchangeRequest);
+        var exchangeRequestVoucher = this.exchangeRequestVoucherService.generateByExchangeRequest(exchangeRequest);
 
         exchangeRequest.complete(exchangeRequestVoucher);
         return ExchangeRequestResponse.fromEntity(this.exchangeRequestRepository.save(exchangeRequest));

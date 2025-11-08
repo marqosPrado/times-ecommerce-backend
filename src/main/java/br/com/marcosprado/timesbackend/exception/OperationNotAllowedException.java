@@ -49,4 +49,16 @@ public class OperationNotAllowedException extends BusinessException {
                 "Pedido que não foi entregue não pode ser trocado"
         );
     }
+
+    public static OperationNotAllowedException insufficientBalance() {
+        return new OperationNotAllowedException(
+                "Saldo insuficiente"
+        );
+    }
+
+    public static OperationNotAllowedException invalidPaymentMethod() {
+        return new OperationNotAllowedException(
+                "Meios de pagamento inválidos"
+        );
+    }
 }

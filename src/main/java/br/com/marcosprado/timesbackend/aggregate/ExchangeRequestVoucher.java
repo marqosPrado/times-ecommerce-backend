@@ -1,11 +1,13 @@
 package br.com.marcosprado.timesbackend.aggregate;
 
 import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
+import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "EXCHANGE_REQUEST_VOUCHERS")
@@ -39,6 +41,9 @@ public class ExchangeRequestVoucher {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private ClientAggregate client;
+
+    @ManyToMany(mappedBy = "exchangeVouchersRequest")
+    private Set<PurchaseOrder> purchaseOrders;
 
     protected ExchangeRequestVoucher() {
     }
@@ -117,5 +122,9 @@ public class ExchangeRequestVoucher {
 
     public void setClient(ClientAggregate client) {
         this.client = client;
+    }
+
+    public void disable() {
+        this.setActive(false);
     }
 }

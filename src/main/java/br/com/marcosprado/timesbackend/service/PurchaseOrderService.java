@@ -6,10 +6,10 @@ import br.com.marcosprado.timesbackend.aggregate.purchase_order.OrderItem;
 import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import br.com.marcosprado.timesbackend.dto.CreatePurchaseOrderRequest;
 import br.com.marcosprado.timesbackend.dto.PurchaseOrderResponse;
-import br.com.marcosprado.timesbackend.dto.purchase_order.PurchaseOrderSummaryResponse;
 import br.com.marcosprado.timesbackend.exception.OperationNotAllowedException;
 import br.com.marcosprado.timesbackend.exception.ResourceNotFoundException;
 import br.com.marcosprado.timesbackend.repository.ClientRepository;
+import br.com.marcosprado.timesbackend.repository.ExchangeVoucherRequestRepository;
 import br.com.marcosprado.timesbackend.repository.PurchaseOrderRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,25 +28,31 @@ public class PurchaseOrderService {
 
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final ClientRepository clientRepository;
+    private final ExchangeVoucherRequestRepository exchangeVoucherRequestRepository;
     private final ProductService productService;
     private final AddressService addressService;
     private final VoucherService voucherService;
     private final CreditCardService creditCardService;
+    private final PaymentService paymentService;
 
     public PurchaseOrderService(
             PurchaseOrderRepository purchaseOrderRepository,
             ClientRepository clientRepository,
+            ExchangeVoucherRequestRepository exchangeVoucherRequestRepository,
             ProductService productService,
             AddressService addressService,
             VoucherService voucherService,
-            CreditCardService creditCardService
+            CreditCardService creditCardService,
+            PaymentService paymentService
     ) {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.clientRepository = clientRepository;
+        this.exchangeVoucherRequestRepository = exchangeVoucherRequestRepository;
         this.productService = productService;
         this.addressService = addressService;
         this.voucherService = voucherService;
         this.creditCardService = creditCardService;
+        this.paymentService = paymentService;
     }
 
     @Transactional
@@ -61,6 +67,17 @@ public class PurchaseOrderService {
 
         Voucher voucher = getVoucher(request);
 
+        if (request.exchangeVouchersId().isEmpty() && request.creditCardId().isEmpty()) {
+            throw OperationNotAllowedException.invalidPaymentMethod();
+        }
+
+        Set<ExchangeRequestVoucher> voucherRequests = request.exchangeVouchersId() != null
+                ? request.exchangeVouchersId().stream()
+                .map(id -> exchangeVoucherRequestRepository.findById(id)
+                        .orElseThrow(() -> ResourceNotFoundException.exchangeRequestVoucherNotFound(id)))
+                .collect(Collectors.toSet())
+                : Set.of();
+
         Set<CreditCardAggregate> creditCards = request.creditCardId() != null
                 ? request.creditCardId().stream()
                 .map(id -> creditCardService.findCreditCardById(id)
@@ -68,7 +85,9 @@ public class PurchaseOrderService {
                 .collect(Collectors.toSet())
                 : Set.of();
 
-        PurchaseOrder purchaseOrder = createPurchaseOrder(orderItem, address, voucher, creditCards, client);
+        PurchaseOrder purchaseOrder = createPurchaseOrder(orderItem, address, voucher, voucherRequests, creditCards, client);
+
+        paymentService.process(purchaseOrder);
 
         return PurchaseOrderResponse.fromEntity(purchaseOrderRepository.save(purchaseOrder));
     }
@@ -77,6 +96,7 @@ public class PurchaseOrderService {
             List<OrderItem> orderItem,
             AddressAggregate address,
             Voucher voucher,
+            Set<ExchangeRequestVoucher> voucherRequests,
             Set<CreditCardAggregate> creditCard,
             ClientAggregate client
     ) {
@@ -86,29 +106,29 @@ public class PurchaseOrderService {
                 purchaseOrderNumber,
                 new BigDecimal("10")
         );
-        orderItem.forEach(purchaseOrder::addItem);
-        purchaseOrder.setAddress(address);
-        purchaseOrder.applyVoucher(voucher);
-        purchaseOrder.setCreditCard(creditCard);
-        purchaseOrder.setClient(client);
+        purchaseOrder.preparePurchaseOrder(
+                orderItem,
+                address,
+                voucher,
+                voucherRequests,
+                creditCard,
+                client
+        );
         return purchaseOrder;
     }
 
     private Voucher getVoucher(CreatePurchaseOrderRequest request) {
-        Voucher voucher = null;
-        if (!(request.voucher() == null)) {
-            Voucher findedVoucher = voucherService.findVoucherByIdentifier(request.voucher())
-                    .orElseThrow(() -> ResourceNotFoundException.voucherNotFound(request.voucher()));
-
-            if (!findedVoucher.isValid()) {
-                throw OperationNotAllowedException.cannotUseInvalidVoucher();
-            }
-
-            if (findedVoucher.getCupomType().isExchange()) {
-                throw OperationNotAllowedException.cannotUseInvalidVoucher();
-            }
-            voucher = findedVoucher;
+        if (request.voucher().isBlank()) {
+            return null;
         }
+
+        Voucher voucher = voucherService.findVoucherByIdentifier(request.voucher())
+                .orElseThrow(() -> ResourceNotFoundException.voucherNotFound(request.voucher()));
+
+        if (!voucher.isValid() || voucher.getCupomType().isExchange()) {
+            throw OperationNotAllowedException.cannotUseInvalidVoucher();
+        }
+
         return voucher;
     }
 

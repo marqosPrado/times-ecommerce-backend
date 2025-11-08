@@ -1,6 +1,7 @@
 package br.com.marcosprado.timesbackend.aggregate.purchase_order;
 
 import br.com.marcosprado.timesbackend.aggregate.AddressAggregate;
+import br.com.marcosprado.timesbackend.aggregate.ExchangeRequestVoucher;
 import br.com.marcosprado.timesbackend.aggregate.client.ClientAggregate;
 import br.com.marcosprado.timesbackend.aggregate.CreditCardAggregate;
 import br.com.marcosprado.timesbackend.aggregate.Voucher;
@@ -10,6 +11,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -69,6 +71,14 @@ public class PurchaseOrder {
             inverseJoinColumns = @JoinColumn(name = "credit_card")
     )
     private Set<CreditCardAggregate> creditCard;
+
+    @ManyToMany
+    @JoinTable(
+            name = "voucher_request_purchase_order",
+            joinColumns = @JoinColumn(name = "purchase_order_id"),
+            inverseJoinColumns = @JoinColumn(name = "voucher_request_id")
+    )
+    private Set<ExchangeRequestVoucher> exchangeVouchersRequest;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", referencedColumnName = "cli_id")
@@ -311,8 +321,32 @@ public class PurchaseOrder {
         return client;
     }
 
+    public Set<ExchangeRequestVoucher> getExchangeVouchersRequest() {
+        return exchangeVouchersRequest;
+    }
+
+    public void setExchangeVouchersRequest(Set<ExchangeRequestVoucher> exchangeVouchersRequest) {
+        this.exchangeVouchersRequest = exchangeVouchersRequest;
+    }
+
     public void setClient(ClientAggregate client) {
         if (client == null) throw new IllegalArgumentException("Cliente não deve ser nulo");
         this.client = client;
+    }
+
+    public void preparePurchaseOrder(
+            List<OrderItem> orderItem,
+            AddressAggregate address,
+            Voucher voucher,
+            Set<ExchangeRequestVoucher> voucherRequests,
+            Set<CreditCardAggregate> creditCard,
+            ClientAggregate client
+    ) {
+        orderItem.forEach(this::addItem);
+        this.setAddress(address);
+        this.applyVoucher(voucher);
+        this.setCreditCard(creditCard);
+        this.setExchangeVouchersRequest(voucherRequests);
+        this.setClient(client);
     }
 }

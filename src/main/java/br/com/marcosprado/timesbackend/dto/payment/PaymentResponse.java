@@ -2,6 +2,7 @@ package br.com.marcosprado.timesbackend.dto.payment;
 
 import br.com.marcosprado.timesbackend.aggregate.purchase_order.PurchaseOrder;
 import br.com.marcosprado.timesbackend.dto.credit_card.CreditCardSummaryResponse;
+import br.com.marcosprado.timesbackend.dto.exchangeVoucher.ExchangeVoucherSummaryResponse;
 import br.com.marcosprado.timesbackend.dto.voucher.VoucherSummaryResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,7 +14,10 @@ public record PaymentResponse(
         Set<CreditCardSummaryResponse> creditCard,
 
         @JsonProperty("voucher")
-        VoucherSummaryResponse voucher
+        VoucherSummaryResponse voucher,
+
+        @JsonProperty("exchange_vouchers")
+        Set<ExchangeVoucherSummaryResponse> exchangeVouchers
 ) {
 
     public static PaymentResponse from(PurchaseOrder order) {
@@ -27,6 +31,12 @@ public record PaymentResponse(
                 ? VoucherSummaryResponse.fromEntity(order.getVoucher())
                 : null;
 
-        return new PaymentResponse(creditCards, voucherResponse);
+        Set<ExchangeVoucherSummaryResponse> exchangeVoucherResponse = order.getExchangeVouchersRequest() != null
+                ? order.getExchangeVouchersRequest().stream()
+                .map(ExchangeVoucherSummaryResponse::fromEntity)
+                .collect(Collectors.toSet())
+                : Set.of();
+
+        return new PaymentResponse(creditCards, voucherResponse, exchangeVoucherResponse);
     }
 }
