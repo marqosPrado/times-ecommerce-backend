@@ -118,7 +118,7 @@ public class PurchaseOrderService {
     }
 
     private Voucher getVoucher(CreatePurchaseOrderRequest request) {
-        if (request.voucher().isBlank()) {
+        if (request.voucher() == null || request.voucher().isBlank()) {
             return null;
         }
 

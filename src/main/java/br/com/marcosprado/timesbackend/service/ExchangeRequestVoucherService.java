@@ -53,14 +53,18 @@ public class ExchangeRequestVoucherService {
         exchangeVoucherRequestRepository.save(voucher);
     }
 
-    public Page<ExchangeVoucherSummaryResponse> getAllByPage(int page, int size, Integer currentUserId) {
+    public Page<ExchangeVoucherSummaryResponse> getAllByPage(int page, int size, String status, Integer currentUserId) {
         var user = clientService.findClientById(currentUserId)
                 .orElseThrow(() -> ResourceNotFoundException.clientNotFound(currentUserId));
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        Page<ExchangeRequestVoucher> vouchers = exchangeVoucherRequestRepository.findAllByClient(user, pageable);
-
+        Page<ExchangeRequestVoucher> vouchers;
+        if (status == null || status.isBlank()) {
+            vouchers = exchangeVoucherRequestRepository.findAllByClient(user, pageable);
+        } else {
+            vouchers = exchangeVoucherRequestRepository.findAllByClientAndIsActive(user, status.equals("active"), pageable);
+        }
         return vouchers.map(ExchangeVoucherSummaryResponse::fromEntity);
     }
 }

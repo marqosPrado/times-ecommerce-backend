@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ExchangeVoucherRequestRepository extends JpaRepository<ExchangeRequestVoucher, Long> {
     Page<ExchangeRequestVoucher> findAllByClient(ClientAggregate client, Pageable pageable);
+
+    Page<ExchangeRequestVoucher> findAllByClientAndIsActive(ClientAggregate client, boolean isActive, Pageable pageable);
 }
