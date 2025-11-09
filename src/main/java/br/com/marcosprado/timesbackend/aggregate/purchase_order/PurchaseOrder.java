@@ -9,6 +9,7 @@ import br.com.marcosprado.timesbackend.aggregate.exchange_request.ExchangeReques
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +36,12 @@ public class PurchaseOrder {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column
+    private LocalDateTime deliveredAt;
+
+    @Column
+    private LocalDate inTransitAt;
 
     @Column(nullable = false)
     private BigDecimal subTotal;
@@ -195,6 +202,7 @@ public class PurchaseOrder {
         }
 
         this.orderStatus = OrderStatus.IN_TRANSIT;
+        this.inTransitAt = LocalDate.now();
     }
 
     public void markAsDelivered() {
@@ -203,6 +211,7 @@ public class PurchaseOrder {
         }
 
         this.orderStatus = OrderStatus.DELIVERED;
+        this.deliveredAt = LocalDateTime.now();
     }
 
     public void markAsExchangeProcess() {

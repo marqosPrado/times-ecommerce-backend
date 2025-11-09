@@ -68,6 +68,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/vouchers/get").hasAnyRole("CLIENT", "ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
+                        .requestMatchers("/api/analytics/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

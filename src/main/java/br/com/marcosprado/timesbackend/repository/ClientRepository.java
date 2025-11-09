@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,6 @@ public interface ClientRepository extends JpaRepository<ClientAggregate, Integer
     Boolean existsByEmail(String email);
 
     Optional<UserDetails> findByEmail(String email);
+
+    Long countByCreatedAtBetween(LocalDate startDate, LocalDate endDate);
 }

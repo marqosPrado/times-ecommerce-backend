@@ -62,6 +62,9 @@ public class ClientAggregate implements UserDetails {
     @Column(name = "cli_credit", precision = 15, scale = 2, nullable = false)
     private BigDecimal credit;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDate createdAt;
+
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AddressAggregate>  addresses;
 
@@ -100,6 +103,7 @@ public class ClientAggregate implements UserDetails {
         this.phoneNumber = phoneNumber;
         this.active = active;
         this.credit = credit;
+        this.createdAt = LocalDate.now();
         this.addresses = addresses;
         this.creditCards = creditCards;
     }
@@ -213,6 +217,14 @@ public class ClientAggregate implements UserDetails {
 
     public void setCredit(BigDecimal credit) {
         this.credit = credit;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 
     public List<AddressAggregate> getAddresses() {
