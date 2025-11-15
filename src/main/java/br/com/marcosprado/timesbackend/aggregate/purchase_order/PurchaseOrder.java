@@ -358,4 +358,8 @@ public class PurchaseOrder {
         this.setExchangeVouchersRequest(voucherRequests);
         this.setClient(client);
     }
+
+    public LocalDateTime getDeliveredAt() {
+        return deliveredAt;
+    }
 }

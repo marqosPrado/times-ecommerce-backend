@@ -12,11 +12,14 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Long> {
     Page<PurchaseOrder> findAllByClient(ClientAggregate client, Pageable pageable);
+
+    Collection<PurchaseOrder> findAllByClientAndOrderStatusEquals(ClientAggregate client, OrderStatus orderStatus);
 
     long countPurchaseOrderByOrderStatusEquals(OrderStatus orderStatus);
 
