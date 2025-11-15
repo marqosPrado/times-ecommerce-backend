@@ -3,6 +3,9 @@ package br.com.marcosprado.timesbackend.dto.product.response;
 import br.com.marcosprado.timesbackend.aggregate.Product;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Collection;
+import java.util.List;
+
 public record ProductFilterResponse(
         Long id,
 
@@ -23,5 +26,11 @@ public record ProductFilterResponse(
                 product.getPrice().toPlainString(),
                 product.getImages().getFirst().getUrl()
         );
+    }
+
+    public static List<ProductFilterResponse> fromEntity(Collection<Product> products) {
+        return products.stream()
+                .map(ProductFilterResponse::fromEntity)
+                .toList();
     }
 }
