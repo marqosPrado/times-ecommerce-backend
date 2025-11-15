@@ -25,3 +25,8 @@ app:
   test:
     cleanup:
       enabled: true
+
+config:
+  env:
+    ia:
+      gemini: ${GOOGLE_API_KEY}
