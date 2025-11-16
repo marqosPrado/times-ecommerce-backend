@@ -5,6 +5,8 @@ import br.com.marcosprado.timesbackend.dto.response.ApiResponse;
 import br.com.marcosprado.timesbackend.service.ProductRecommendationService;
 import br.com.marcosprado.timesbackend.util.SecurityUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/product-recommendation")
+@CrossOrigin(origins = "*")
 public class ProductRecommendation {
     private final ProductRecommendationService productRecommendationService;
 
@@ -19,7 +22,7 @@ public class ProductRecommendation {
         this.productRecommendationService = productRecommendationService;
     }
 
-    @RequestMapping("/recommend")
+    @GetMapping("/recommend")
     public ResponseEntity<ApiResponse<List<ProductFilterResponse>>> recommend() {
         Integer customerId = SecurityUtils.getCurrentUserId();
 
