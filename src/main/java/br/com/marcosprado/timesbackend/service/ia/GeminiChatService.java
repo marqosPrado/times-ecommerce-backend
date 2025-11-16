@@ -11,9 +11,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Service for interacting with Google Gemini AI for chat conversations
- */
 @Service
 public class GeminiChatService implements IAChat {
     private final String systemInstruction;
@@ -37,17 +34,14 @@ public class GeminiChatService implements IAChat {
     public String sendMessage(String message, List<ConversationMessage> conversationHistory) {
         Client client = new Client();
 
-        // Build conversation contents
         List<Content> contents = new ArrayList<>();
 
-        // Add conversation history if present
         if (conversationHistory != null && !conversationHistory.isEmpty()) {
             for (ConversationMessage msg : conversationHistory) {
                 contents.add(createContent(msg.role(), msg.content()));
             }
         }
 
-        // Add current user message
         contents.add(createContent("user", message));
 
         GenerateContentConfig config = GenerateContentConfig.builder()
@@ -68,15 +62,7 @@ public class GeminiChatService implements IAChat {
         }
     }
 
-    /**
-     * Creates a Content object for the conversation
-     *
-     * @param role "user" or "model" (Gemini uses "model" instead of "assistant")
-     * @param text The message text
-     * @return Content object
-     */
     private Content createContent(String role, String text) {
-        // Map "assistant" to "model" for Gemini API compatibility
         String geminiRole = role.equals("assistant") ? "model" : role;
 
         return Content.builder()
