@@ -2,6 +2,7 @@ package br.com.marcosprado.timesbackend.service;
 
 import br.com.marcosprado.timesbackend.aggregate.Product;
 import br.com.marcosprado.timesbackend.aggregate.purchase_order.OrderStatus;
+import br.com.marcosprado.timesbackend.config.cache.InMemoryCache;
 import br.com.marcosprado.timesbackend.dto.iaRecommendation.request.ProductRecommendationRequestBuilder;
 import br.com.marcosprado.timesbackend.dto.product.response.ProductFilterResponse;
 import br.com.marcosprado.timesbackend.exception.ResourceNotFoundException;
@@ -18,17 +19,20 @@ public class ProductRecommendationService {
     private final ProductRepository productRepository;
     private final ClientService clientService;
     private final IARecommendation iaRecommendationService;
+    private final InMemoryCache iaRecommendationCache;
 
     public ProductRecommendationService(
             PurchaseOrderRepository purchaseOrderRepository,
             ProductRepository productRepository,
             ClientService clientService,
-            IARecommendation iaRecommendationService
+            IARecommendation iaRecommendationService,
+            InMemoryCache iaRecommendationCache
     ) {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.productRepository = productRepository;
         this.clientService = clientService;
         this.iaRecommendationService = iaRecommendationService;
+        this.iaRecommendationCache = iaRecommendationCache;
     }
 
     public List<ProductFilterResponse> recommend(Integer customerId) {
@@ -36,6 +40,11 @@ public class ProductRecommendationService {
 
         var customer = clientService.findClientById(customerId)
                 .orElseThrow(() -> ResourceNotFoundException.clientNotFound(customerId));
+
+        var recommendationCached = iaRecommendationCache.get(customerId);
+        if (recommendationCached != null) {
+            return ProductFilterResponse.fromEntity(recommendationCached);
+        }
 
         var purchaseOrderHistory = purchaseOrderRepository.findAllByClientAndOrderStatusEquals(
                 customer,
@@ -68,6 +77,8 @@ public class ProductRecommendationService {
                 ).stream())
                 .distinct()
                 .toList();
+
+        iaRecommendationCache.put(customerId, products);
 
         return ProductFilterResponse.fromEntity(products);
     }
