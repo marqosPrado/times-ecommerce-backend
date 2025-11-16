@@ -1,12 +1,10 @@
 package br.com.marcosprado.timesbackend.dto.chat;
 
-import br.com.marcosprado.timesbackend.dto.product.ProductFilterResponse;
+
+import br.com.marcosprado.timesbackend.dto.product.response.ProductFilterResponse;
 
 import java.util.List;
 
-/**
- * Response DTO containing chatbot's reply and optional product suggestions
- */
 public record ChatMessageResponse(
         String message,
         String conversationId,

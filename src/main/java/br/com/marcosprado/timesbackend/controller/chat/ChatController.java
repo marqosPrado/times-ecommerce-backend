@@ -8,10 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * REST Controller for chatbot interactions
- * Provides endpoints for conversing with the AI assistant about products
- */
+
 @RestController
 @RequestMapping("/api/chat")
 @CrossOrigin(origins = "*")
@@ -23,12 +20,6 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    /**
-     * Send a message to the chatbot and receive a response
-     *
-     * @param request ChatMessageRequest containing the user's message and optional conversation history
-     * @return ChatMessageResponse with AI reply and optional product suggestions
-     */
     @PostMapping("/message")
     public ResponseEntity<ApiResponse<ChatMessageResponse>> sendMessage(
             @Valid @RequestBody ChatMessageRequest request
