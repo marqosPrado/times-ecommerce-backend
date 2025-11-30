@@ -55,13 +55,11 @@ public class ChatService {
 
     private SearchCriteria extractSearchCriteria(String aiResponse) {
         try {
-            // Pattern to find CRITÉRIOS_BUSCA: { ... }
             Pattern pattern = Pattern.compile("CRITÉRIOS_BUSCA:\\s*\\{[^}]*\\}", Pattern.DOTALL);
             Matcher matcher = pattern.matcher(aiResponse);
 
             if (matcher.find()) {
                 String jsonStr = matcher.group();
-                // Extract just the JSON part
                 jsonStr = jsonStr.substring(jsonStr.indexOf("{"));
 
                 JsonNode jsonNode = objectMapper.readTree(jsonStr);
