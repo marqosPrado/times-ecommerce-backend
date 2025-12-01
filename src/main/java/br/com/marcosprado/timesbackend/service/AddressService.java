@@ -28,10 +28,10 @@ public class AddressService {
     }
 
     public AddressDto[] getAllAddressByClientId(Integer clientId) {
-        this.clientService.findClientById(clientId)
+        var client = this.clientService.findClientById(clientId)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
-        return AddressDto.fromEntities(addressRepository.findAll());
+        return AddressDto.fromEntities(client.getAddresses());
     }
 
     public AddressDto registerAddress(AddressDto addressDto, Integer clientId) {
