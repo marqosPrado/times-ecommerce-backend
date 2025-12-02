@@ -83,14 +83,3 @@ Recomendações de alta relojoaria:
 3.  **Jaeger-LeCoultre Reverso:** Um modelo sofisticado com caixa reversível, ideal para quem busca uma peça com história e originalidade.
 
 Qual destas abordagens – o clássico redondo (Calatrava), o retangular (Tank) ou o inovador reversível (Reverso) – mais lhe agrada?
-
-CRITÉIOS\_BUSCA:
-{
-"gender": "UNISSEX",
-"brand\_suggestion": ["Patek Philippe", "Cartier", "JLC"],
-"style": "Dress",
-"complication": "Nenhuma (simples) ou Fases da Lua",
-"caseMaterial": "Ouro ou Platina",
-"priceRange": "Alto"
-}
-"
