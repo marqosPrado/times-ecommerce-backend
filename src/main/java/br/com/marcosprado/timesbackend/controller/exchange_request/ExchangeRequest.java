@@ -37,9 +37,10 @@ public class ExchangeRequest {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<ExchangeRequestResponse>>> getAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) br.com.marcosprado.timesbackend.aggregate.exchange_request.ExchangeStatus status
     ) {
-        return ResponseEntity.ok(ApiResponse.success(exchangeRequestService.getAll(page, size)));
+        return ResponseEntity.ok(ApiResponse.success(exchangeRequestService.getAll(page, size, status)));
     }
 
     @PatchMapping("/{exchangeId}/approve")

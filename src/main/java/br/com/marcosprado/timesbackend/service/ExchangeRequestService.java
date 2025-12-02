@@ -92,10 +92,16 @@ public class ExchangeRequestService {
     }
 
     @Transactional
-    public Page<ExchangeRequestResponse> getAll(int page, int size) {
+    public Page<ExchangeRequestResponse> getAll(int page, int size, br.com.marcosprado.timesbackend.aggregate.exchange_request.ExchangeStatus status) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("requestedAt").descending());
 
-        Page<ExchangeRequest> exchangeRequests = this.exchangeRequestRepository.findAll(pageable);
+        Page<ExchangeRequest> exchangeRequests;
+        if (status != null) {
+            exchangeRequests = this.exchangeRequestRepository.findByExchangeStatus(status, pageable);
+        } else {
+            exchangeRequests = this.exchangeRequestRepository.findAll(pageable);
+        }
+
         return exchangeRequests.map(ExchangeRequestResponse::fromEntity);
     }
 
